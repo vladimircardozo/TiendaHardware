@@ -63,7 +63,7 @@ router.post('/',  (req, res) => {
 //!: NO FUNCIONA, ARREGLAR
 router.put('/:pid', (req, res) => {
     const productId = parseInt(req.params.pid, 10);
-    const  product = products.find(product => product.id === productId);
+    const  product = products.findIndex(product => product.id === productId);
 
     if(product === -1) {
         return res.status(404).json({ message: 'Producto no encontrado' });
@@ -91,7 +91,7 @@ router.put('/:pid', (req, res) => {
 //!: NO FUNCIONA, ARREGLAR
 router.delete('/:pid', (req, res) => {
     const productId = parseInt(req.params.pid, 10);
-    const index = products.find(product => product.id === productId);
+    const index = products.findIndex(product => product.id === productId);
 
     if (index > -1) {
         products.splice(index, 1); // Elimina el producto
@@ -100,7 +100,6 @@ router.delete('/:pid', (req, res) => {
         res.status(404).json({ message: 'Producto no encontrado' });
     }
 });
-
 
 
 export default router;
