@@ -9,6 +9,7 @@ const products = [
 ];
 
 // Ruta para obtener todos los productos, con opción de límite
+//!: NO FUNCIONA, ARREGLAR
 router.get('/', (req, res) => {
     const { limit } = req.query; // Obtener el parámetro de consulta 'limit'
     
@@ -57,6 +58,49 @@ router.post('/',  (req, res) => {
     res.status(201).json(newProduct); // Devuelve el nuevo producto creado
 
 })
+
+// Ruta para actualizar un producto 
+//!: NO FUNCIONA, ARREGLAR
+router.put('/:pid', (req, res) => {
+    const productId = parseInt(req.params.pid, 10);
+    const  product = products.find(product => product.id === productId);
+
+    if(product === -1) {
+        return res.status(404).json({ message: 'Producto no encontrado' });
+    }
+
+    const {title, description, code, price, stock, category, thumbnails = []} = req.body;
+
+    if (!title || !description || !code ||  !price || !stock || !category) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios.'});
+    }
+
+    products[product].title = title;
+    products[product].description = description;
+    products[product].code = code;
+    products[product].price = price;
+    products[product].stock = stock;
+    products[product].category = category;
+    products[product].thumbnails = thumbnails;
+
+    res.json(products[product])
+
+});
+
+// Ruta para eliminar un producto por ID
+//!: NO FUNCIONA, ARREGLAR
+router.delete('/:pid', (req, res) => {
+    const productId = parseInt(req.params.pid, 10);
+    const index = products.find(product => product.id === productId);
+
+    if (index > -1) {
+        products.splice(index, 1); // Elimina el producto
+        res.status(200).json({ message: 'Producto eliminado exitosamente' });
+    } else {
+        res.status(404).json({ message: 'Producto no encontrado' });
+    }
+});
+
 
 
 export default router;
