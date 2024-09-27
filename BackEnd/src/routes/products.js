@@ -12,7 +12,8 @@ const products = [
 router.get('/', (req, res) => {
     const { limit } = req.query; // Obtener el parámetro de consulta 'limit'
     
-    const limitNumber = limit ? parseInt(limit, 10) : products.length;
+     // Si 'limit' no es un número, usa el tamaño total de productos
+    const limitNumber = isNaN(parseInt(limit, 10)) ? products.length : parseInt(limit, 10);
 
     const responseProducts = products.slice(0, limitNumber);
     res.json(responseProducts);
@@ -59,11 +60,10 @@ router.post('/',  (req, res) => {
 })
 
 //TODO: Ruta para actualizar un producto 
-
 router.put('/:pid', (req, res) => {
     const productId = parseInt(req.params.pid, 10);
     const  product = products.findIndex(product => product.id === productId);
-
+    
     if(product === -1) {
         return res.status(404).json({ message: 'Producto no encontrado' });
     }
@@ -74,13 +74,16 @@ router.put('/:pid', (req, res) => {
         return res.status(400).json({ message: 'Todos los campos son obligatorios.'});
     }
 
-    products[product].title = title;
-    products[product].description = description;
-    products[product].code = code;
-    products[product].price = price;
-    products[product].stock = stock;
-    products[product].category = category;
-    products[product].thumbnails = thumbnails;
+    products[productIndex] = {
+        ...products[product], // Mantener las propiedades existentes que no cambian
+        title,
+        description,
+        code,
+        price,
+        stock,
+        category,
+        thumbnails
+    };
 
     res.json(products[product])
 
