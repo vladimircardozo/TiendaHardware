@@ -8,8 +8,7 @@ const products = [
     { id: 3, title: 'Product 3', description: 'Description 3', code: 'P3', price: 300, status: true, stock: 20, category: 'Category 3' },
 ];
 
-// Ruta para obtener todos los productos, con opción de límite
-//!: NO FUNCIONA, ARREGLAR
+//TODO: Ruta para obtener todos los productos, con opción de límite
 router.get('/', (req, res) => {
     const { limit } = req.query; // Obtener el parámetro de consulta 'limit'
     
@@ -19,7 +18,7 @@ router.get('/', (req, res) => {
     res.json(responseProducts);
 });
 
-// Ruta para obtener un producto por ID
+//TODO: Ruta para obtener un producto por ID
 router.get('/:pid', (req, res) => {
     const productId = parseInt(req.params.pid, 10);
     const product = products.find(product => product.id === productId);
@@ -59,8 +58,8 @@ router.post('/',  (req, res) => {
 
 })
 
-// Ruta para actualizar un producto 
-//!: NO FUNCIONA, ARREGLAR
+//TODO: Ruta para actualizar un producto 
+
 router.put('/:pid', (req, res) => {
     const productId = parseInt(req.params.pid, 10);
     const  product = products.findIndex(product => product.id === productId);
@@ -87,8 +86,7 @@ router.put('/:pid', (req, res) => {
 
 });
 
-// Ruta para eliminar un producto por ID
-//!: NO FUNCIONA, ARREGLAR
+//TODO: Ruta para eliminar un producto por ID
 router.delete('/:pid', (req, res) => {
     const productId = parseInt(req.params.pid, 10);
     const index = products.findIndex(product => product.id === productId);
