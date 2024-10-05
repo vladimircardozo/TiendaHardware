@@ -29,6 +29,9 @@ export const NavBar = () => {
                 <Link to="/" className="nav-link hvr-underline-reveal">Inicio</Link>
               </li>
               <li className="nav-item">
+                <Link to="/" className="nav-link hvr-underline-reveal">Productos</Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link hvr-underline-reveal">Quiénes somos?</Link>
               </li>
               <li className="nav-item">

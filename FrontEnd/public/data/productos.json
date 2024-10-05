@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "nombre": "AURICULARES GAMER SHENLONG HS1000 LED",
+    "precio": 25.199,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/AURICULARES GAMER SHENLONG HS1000 LED.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "GABINETE AUREOX SKOLL ARX200 + 1 FAN RGB",
+    "precio": 46.124,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/GABINETE AUREOX SKOLL ARX200 + 1 FAN RGB.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "FAN COOLER CORSAIR AR120 RGB",
+    "precio": 21.452,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/FAN COOLER CORSAIR AR120 RGB.png"
+  },
+  {
+    "id": 4,
+    "nombre": "DISCO SOLIDO SSD 240GB KINGSTON A400 SATA III",
+    "precio": 33.034,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/DISCO SOLIDO SSD 240GB KINGSTON A400 SATA III.png"
+  },
+  {
+    "id": 5,
+    "nombre": "MICRO AMD RYZEN 5 4600G 4.2 GHZ AM4",
+    "precio": 135.139,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/MICRO AMD RYZEN 5 4600G 4.2 GHZ AM4.png"
+  },
+  {
+    "id": 6,
+    "nombre": "MONITOR 25 GIGABYTE AORUS FI25F GAMING IPS",
+    "precio": 342.576,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/MONITOR 25 GIGABYTE AORUS FI25F GAMING IPS.png"
+  },
+  {
+    "id": 7,
+    "nombre": "MOUSEPAD LISO TRUST PAD-100",
+    "precio": 5.126,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/PAD MOUSE M TRUST.png"
+  },
+  {
+    "id": 8,
+    "nombre": "MOTHER BIOSTAR H61MHV3 DDR3 SOCKET",
+    "precio": 45.255,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/MOTHER BIOSTAR H61MHV3 DDR3 SOCKET.png"
+  },
+  {
+    "id": 9,
+    "nombre": "TECLADO LOGITECH PRO X TKL LIGHTSPEED WHITE",
+    "precio": 250.742,
+    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "imagen": "../../src/assets/img/TECLADO LOGITECH PRO X TKL LIGHTSPEED WHITE.png"
+  }
+]
