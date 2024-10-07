@@ -1,22 +1,25 @@
 import express from 'express';
-const router = express.Router();
+import fs from  'fs';
 
-const carts = [
-  {
-    id: 1,
-    products: [
-      { productId: 1, quantity: 2 },
-      { productId: 2, quantity: 1 },
-    ],
-  },
-  {
-    id: 2,
-    products: [
-      { productId: 3, quantity: 4 },
-      { productId: 1, quantity: 1 },
-    ],
-  },
-];
+
+const router = express.Router();
+const filePath = './data/productos.json';
+
+const loadCarts = () => {
+  try {
+  const data = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(data);
+} catch (error) {
+  return [];
+}
+};
+
+const saveCarts = (carts) => {
+  fs.writeFileSync(filePath, JSON.stringify(carts, null, 2), 'utf-8')
+}
+
+let carts = loadCarts();
+
 
 //TODO: Ruta para obtener los datos de un carrito por su ID
 router.get('/:cid', (req, res) => {
@@ -43,6 +46,8 @@ router.post('/', (req, res) => {
   // Agregar el nuevo carrito a la lista
   carts.push(newCart);
 
+  saveCarts(carts)
+
   res.status(201).json(newCart); // Devuelve el nuevo carrito creado
 });
 
@@ -63,6 +68,8 @@ router.post('/:cid/product/:pid', (req, res) => {
     } else {
         cart.products.push({ productId, quantity: 1 });
     }
+
+    saveCarts(carts);
 
     res.status(200).json(cart);
 
