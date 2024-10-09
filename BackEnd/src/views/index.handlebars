@@ -1,0 +1,24 @@
+<html lang='es'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Productos</title>
+  </head>
+  <body>
+    <h1>Lista de productos</h1>
+    <ul>
+      {{#each products}}
+        <li><h2>{{this.nombre}}</h2>
+          <p>Precio: ${{this.precio}}</p>
+          <p>{{this.descripcion}}</p>
+          <img src="{{this.imagen}}" alt="{{this.nombre}}">
+          <p>Categoría: {{this.categoria}}</p>
+        </li>
+      {{/each}}
+    </ul>
+    <script src='/socket.io/socket.io.js'></script>
+    <script>
+      const socket = io(); socket.emit('message', 'cliente conectado');
+    </script>
+  </body>
+</html>
