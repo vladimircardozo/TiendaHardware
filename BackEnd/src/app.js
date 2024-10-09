@@ -14,7 +14,7 @@ const io = new socketIOserver(server); // Inicializa Socket.IO con el servidor
 
 // Configuración del motor Handlebars
 const hbs = create({
-    extname: '.handlebars', 
+    extname: '.handlebars',
 });
 
 app.engine('.handlebars',  hbs.engine);
@@ -40,8 +40,16 @@ app.get('/products', (req, res) => {
             console.error('Error al leer el archivo:', err); 
             return res.status(500).json({ message: 'Error al cargar productos', error: err.message });
         }
+        try {
+            const products = JSON.parse(data); // Intenta parsear los datos JSON
+            res.render('index', { products }); // Renderiza la vista con los productos
+        } catch (parseError) {
+            console.error('Error al analizar JSON:', parseError);
+            return res.status(500).json({ message: 'Error al cargar productos', error: parseError.message });
+        }
     });
 });
+
 
 
 // Configuración de Socket.IO
