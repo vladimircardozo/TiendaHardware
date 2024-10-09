@@ -4,7 +4,7 @@
     "nombre": "AURICULARES GAMER SHENLONG HS1000 LED",
     "precio": 25.199,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/AURICULARES GAMER SHENLONG HS1000 LED.jpg",
+    "imagen": "../src/public/img/AURICULARES GAMER SHENLONG HS1000 LED.jpg",
     "categoria": "Perifericos"
   },
   {
@@ -12,7 +12,7 @@
     "nombre": "GABINETE AUREOX SKOLL ARX200 + 1 FAN RGB",
     "precio": 46.124,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/GABINETE AUREOX SKOLL ARX200 + 1 FAN RGB.jpg",
+    "imagen": "../src/public/img/GABINETE AUREOX SKOLL ARX200 + 1 FAN RGB.jpg",
     "categoria": "Componentes"
   },
   {
@@ -20,7 +20,7 @@
     "nombre": "FAN COOLER CORSAIR AR120 RGB",
     "precio": 21.452,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/FAN COOLER CORSAIR AR120 RGB.png",
+    "imagen": "../src/public/img/FAN COOLER CORSAIR AR120 RGB.png",
     "categoria": "Componentes"
   },
   {
@@ -28,7 +28,7 @@
     "nombre": "DISCO SOLIDO SSD 240GB KINGSTON A400 SATA III",
     "precio": 33.034,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/DISCO SOLIDO SSD 240GB KINGSTON A400 SATA III.png",
+    "imagen": "../src/public/img/DISCO SOLIDO SSD 240GB KINGSTON A400 SATA III.png",
     "categoria": "Componentes"
   },
   {
@@ -36,7 +36,7 @@
     "nombre": "MICRO AMD RYZEN 5 4600G 4.2 GHZ AM4",
     "precio": 135.139,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/MICRO AMD RYZEN 5 4600G 4.2 GHZ AM4.png",
+    "imagen": "../src/public/img/MICRO AMD RYZEN 5 4600G 4.2 GHZ AM4.png",
     "categoria": "Componentes"
   },
   {
@@ -44,7 +44,7 @@
     "nombre": "MONITOR 25 GIGABYTE AORUS FI25F GAMING IPS",
     "precio": 342.576,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/MONITOR 25 GIGABYTE AORUS FI25F GAMING IPS.png",
+    "imagen": "../src/src/public/img/MONITOR 25 GIGABYTE AORUS FI25F GAMING IPS.png",
     "categoria": "Perifericos"
   },
   {
@@ -52,7 +52,7 @@
     "nombre": "MOUSEPAD LISO TRUST PAD-100",
     "precio": 5.126,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/PAD MOUSE M TRUST.png",
+    "imagen": "../src/public/img/PAD MOUSE M TRUST.png",
     "categoria": "Perifericos"
   },
   {
@@ -60,7 +60,7 @@
     "nombre": "MOTHER BIOSTAR H61MHV3 DDR3 SOCKET",
     "precio": 45.255,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/MOTHER BIOSTAR H61MHV3 DDR3 SOCKET.png",
+    "imagen": "../src/public/img/MOTHER BIOSTAR H61MHV3 DDR3 SOCKET.png",
     "categoria": "Componentes"
   },
   {
@@ -68,7 +68,7 @@
     "nombre": "TECLADO LOGITECH PRO X TKL LIGHTSPEED WHITE",
     "precio": 250.742,
     "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "imagen": "../public/img/TECLADO LOGITECH PRO X TKL LIGHTSPEED WHITE.png",
+    "imagen": "../src/public/img/TECLADO LOGITECH PRO X TKL LIGHTSPEED WHITE.png",
     "categoria": "Perifericos"
   }
 ]

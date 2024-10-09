@@ -17,9 +17,9 @@ const hbs = create({
     extname: '.handlebars',
 });
 
-app.engine('.handlebars',  hbs.engine);
-app.set('view engine',  '.handlebars');
-app.set('views', path.join(process.cwd(),  'views'));
+app.engine('.handlebars', hbs.engine);
+app.set('view engine', '.handlebars');
+app.set('views', path.join(process.cwd(), 'src/views'));
 
 // Middleware para analizar JSON y cuerpos URL-encoded
 app.use(express.json());
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(process.cwd(), 'public')));
 
 // Rutas
-app.use('/api/products',  productsRouter);
+app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 
 // Ruta para mostrar productos en la vista Handlebars
@@ -50,7 +50,25 @@ app.get('/products', (req, res) => {
     });
 });
 
+// Ruta para mostrar productos en tiempo real
+app.get('/realtimeproducts',  (req, res) => { 
+    const filePath = path.join(process.cwd(), 'data', 'productos.json');
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if  (err) { 
+            console.error('Error al leer el archivo:', err);
+            return res.status(500).json({ message: 'Error al cargar productos', error: err.message});
+        }
+        try {
+            const products = JSON.parse(data);
+            res.render('realTimeProducts', {products});
+        }  catch (parseError) { 
+            console.error('Error al analizar JSON:', parseError);
+            return res.status(500).json({ message: 'Error al cargar productos', error: parseError.message });
+        }
+    });
+});
 
+//TODO: mejorar la rita de socket.IO
 
 // Configuración de Socket.IO
 io.on('connection', (socket) => {
