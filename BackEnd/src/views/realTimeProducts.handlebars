@@ -7,13 +7,24 @@
 </head>
 <body>
     <h1>Productos en tiempo real</h1>
+
+    <form id="product-form">
+        <input type="text" id="product-title" placeholder="Titulo" required>
+        <input type="text" id="product-description" placeholder="Descripcion" required>
+        <input type="text" id="product-code" placeholder="Código" required>
+        <input type="number" id="product-price" placeholder="Precio" required>
+        <input type="number" id="product-stock" placeholder="Stock" required>
+        <input type="text" id="product-category"  placeholder="Categoría" required>
+        <button type="submit">Agregar producto</button>
+    </form>
+
     <ul id="product-list">
         {{#each products}}
-        <li id="product-{{@index}}">
+        <li id="product-{{id}}">
             <h2>{{nombre}}</h2>
             <p>Precio: ${{precio}}</p>
             <p>{{descripcion}}</p>
-            <button onclick="deleteProduct('{{@index}}')">Eliminar</button>
+            <button onclick="deleteProduct('{{id}}')">Eliminar</button>
         </li>
         {{/each}}
     </ul>
@@ -25,13 +36,13 @@
         socket.on('updateProducts', (products) => {
             const productlist = document.getElementById('product-list');
             productlist.innerHTML = '';
-            products.forEach((product, index) => {
+            products.forEach((product) => {
                 const productItem = `
-                <li id="product-${index}">
+                <li id="product-${product.id}">
                 <h2>${product.nombre}</h2>
                 <p> precio: $${product.precio}</p>
                 <p>  ${product.descripcion}</p>
-                <button  onclick="deleteProduct(${index})">Eliminar</button>
+                <button  onclick="deleteProduct(${product.id})">Eliminar</button>
                 </li>
                 `;
                 productlist.innerHTML += productItem;
@@ -40,6 +51,32 @@
         function deleteProduct(index) {
             socket.emit('deleteProduct', index);
         }
+
+        // Manejar el envío del formulario para agregar un producto
+        document.getElementById('product-form').addEventListener('submit', (e) => {
+            event.preventDefault();
+
+            // Obtener los valores del formulario
+            const title =  document.getElementById('product-title').value;
+            const descripcion = document.getElementById('product-description').value;
+            const code = document.getElementById('product-code').value;
+            const price = document.getElementById('product-price').value;
+            const stock = document.getElementById('product-stock').value;
+            const category = document.getElementById('product-category').value;
+
+            //Enviar el nuevo producto al servidor
+            socket.emit('addProduct', {
+
+            title,
+            descripcion,
+            code,
+            price,
+            stock,
+            category
+            })
+        }
+
+        document.getElementById('product-form').reset();
     </script>
 </body>
 </html>

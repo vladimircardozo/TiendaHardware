@@ -74,10 +74,29 @@ app.get('/realtimeproducts',  (req, res) => {
 io.on('connection', (socket) => {
     console.log('Nuevo cliente conectado');
 
-    // Recibir mensajes del cliente
-    socket.on('message', (data) => {
-        console.log('Mensaje recibido:', data);
+// Enviar productos en tiempo real cuando un nuevo cliente se conecta
+const filePath = path.join(process.cwd(), 'data', 'productos.json');
+fs.readFile(filePath,  'utf8', (err, data) => {
+    if(!err) {
+        const products = JSON.parse(data);
+        socket.emit('actualizarProductos', products);
+    }
+});
+
+//Escuchar la eliminacion de productos
+socket.on('deleteProduct', (index) => {
+    const filePath = path.join(process.cwd(), 'data', 'productos.json');
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (!err) {
+            const products = JSON.parse(data);
+            products.splice(index, 1);
+            fs.writeFile(filePath, JSON.stringify(products, null, 2), (err) => {
+                if (err) throw err;
+                io.emit('actualizarProductos', products)
+            });
+        }
     });
+});
 
     // Manejar la desconexión del cliente
     socket.on('disconnect', () => {

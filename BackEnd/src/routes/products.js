@@ -1,28 +1,48 @@
 import express from 'express';
+import fs from  'fs';
+import path from 'path';
 
 const router = express.Router();
+const filePath = path.join(process.cwd(), 'data', 'productos.json');
 
-const products = [
-    { id: 1, title: 'Product 1', description: 'Description 1', code: 'P1', price: 100, status: true, stock: 50, category: 'Category 1' },
-    { id: 2, title: 'Product 2', description: 'Description 2', code: 'P2', price: 200, status: true, stock: 30, category: 'Category 2' },
-    { id: 3, title: 'Product 3', description: 'Description 3', code: 'P3', price: 300, status: true, stock: 20, category: 'Category 3' },
-];
+//TODO: Función auxiliar para leer productos desde un archivo
+const leerProductosDesdeArchivo = () => {
+    try {
+        const data = fs.readFileSync(filePath,  'utf8');
+        return JSON.parse(data);
+    } catch (err) {
+        console.error('Error al leer el archivo:', err);
+        return[];
+    }
+}
 
-//TODO: Ruta para obtener todos los productos, con opción de límite
+//TODO:  Función auxiliar para escribir productos en un archivo
+const escribirProductosEnArchivo = (products) => {
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(products, null, 2));
+    } catch (err) {
+        console.error('Error al escribir en el archivo:', err);
+    }
+};
+
 router.get('/', (req, res) => {
-    const { limit } = req.query; // Obtener el parámetro de consulta 'limit'
-    
-     // Si 'limit' no es un número, usa el tamaño total de productos
-    const limitNumber = isNaN(parseInt(limit, 10)) ? products.length : parseInt(limit, 10);
+    const products = leerProductosDesdeArchivo();
+    const productId = parseInt(req.params.pid, 10);
+    const product =  products.find((product) => product.id === productId);
 
-    const responseProducts = products.slice(0, limitNumber);
-    res.json(responseProducts);
-});
+    if (product) {
+        res.json(product);
+    } else {
+        res.status(404).json({ message: 'Producto no encontrado' });
+    }
+
+})
 
 //TODO: Ruta para obtener un producto por ID
 router.get('/:pid', (req, res) => {
+    const products = leerProductosDesdeArchivo();
     const productId = parseInt(req.params.pid, 10);
-    const product = products.find(product => product.id === productId);
+    const product = products.find((product) => product.id === productId);
 
     if (product) {
         res.json(product);
@@ -31,10 +51,12 @@ router.get('/:pid', (req, res) => {
     }
 });
 
+//TODO: Ruta para agregar productos
 router.post('/',  (req, res) => {
-    const {title, description, code, price, stock, category, thumbnails = []} = req.body;
+    const products  = leerProductosDesdeArchivo();
+    const {nombre, descripcion, code, precio, stock, categoria, imagen = []} = req.body;
 
-    if (!title || !description || !code || !price || !stock || !category) {
+    if (!nombre || !descripcion || !code || !precio || !stock || !categoria) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios.'})
     }
 
@@ -43,59 +65,64 @@ router.post('/',  (req, res) => {
 
     const newProduct = {
         id: newId,
-        title,
-        description,
+        nombre,
+        descripcion,
         code,
-        price,
+        precio,
         status: true,
         stock,
-        category,
-        thumbnails
+        categoria,
+        imagen
     };
 
     // Agregar el nuevo producto a la lista
     products.push(newProduct);
+    escribirProductosEnArchivo(products)
     res.status(201).json(newProduct); // Devuelve el nuevo producto creado
 
 })
 
 //TODO: Ruta para actualizar un producto 
 router.put('/:pid', (req, res) => {
+    const products  = leerProductosDesdeArchivo();
     const productId = parseInt(req.params.pid, 10);
-    const  product = products.findIndex(product => product.id === productId);
+    const  productIndex = products.findIndex(product => product.id === productId);
     
-    if(product === -1) {
+    if(productIndex === -1) {
         return res.status(404).json({ message: 'Producto no encontrado' });
     }
 
-    const {title, description, code, price, stock, category, thumbnails = []} = req.body;
+    const {nombre, descripcion, code, precio, stock, categoria, imagen = []} = req.body;
 
-    if (!title || !description || !code ||  !price || !stock || !category) {
+    if (!nombre || !descripcion || !code ||  !precio || !stock || !categoria) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios.'});
     }
 
     products[productIndex] = {
-        ...products[product], // Mantener las propiedades existentes que no cambian
-        title,
-        description,
+        ...products[productIndex], // Mantener las propiedades existentes que no cambian
+        nombre,
+        descripcion,
         code,
-        price,
+        precio,
         stock,
-        category,
-        thumbnails
+        categoria,
+        imagen
     };
 
-    res.json(products[product])
+    escribirProductosEnArchivo(products);
+    res.json(products[productIndex]); // Devolver el producto actualizado
 
 });
 
 //TODO: Ruta para eliminar un producto por ID
 router.delete('/:pid', (req, res) => {
+    const products  = leerProductosDesdeArchivo();
     const productId = parseInt(req.params.pid, 10);
     const index = products.findIndex(product => product.id === productId);
 
     if (index > -1) {
         products.splice(index, 1); // Elimina el producto
+        escribirProductosEnArchivo(products);
         res.status(200).json({ message: 'Producto eliminado exitosamente' });
     } else {
         res.status(404).json({ message: 'Producto no encontrado' });
