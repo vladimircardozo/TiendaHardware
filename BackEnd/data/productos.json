@@ -1,73 +1,73 @@
 [
   {
     "id": 1,
-    "nombre": "AURICULARES GAMER SHENLONG HS1000 LED",
-    "precio": 25.199,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "AURICULARES GAMER SHENLONG HS1000 LED",
+    "price": 25.199,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/public/img/AURICULARES GAMER SHENLONG HS1000 LED.jpg",
     "categoria": "Perifericos"
   },
   {
     "id": 2,
-    "nombre": "GABINETE AUREOX SKOLL ARX200 + 1 FAN RGB",
-    "precio": 46.124,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "GABINETE AUREOX SKOLL ARX200 + 1 FAN RGB",
+    "price": 46.124,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/public/img/GABINETE AUREOX SKOLL ARX200 + 1 FAN RGB.jpg",
     "categoria": "Componentes"
   },
   {
     "id": 3,
-    "nombre": "FAN COOLER CORSAIR AR120 RGB",
-    "precio": 21.452,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "FAN COOLER CORSAIR AR120 RGB",
+    "price": 21.452,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/public/img/FAN COOLER CORSAIR AR120 RGB.png",
     "categoria": "Componentes"
   },
   {
     "id": 4,
-    "nombre": "DISCO SOLIDO SSD 240GB KINGSTON A400 SATA III",
-    "precio": 33.034,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "DISCO SOLIDO SSD 240GB KINGSTON A400 SATA III",
+    "price": 33.034,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/public/img/DISCO SOLIDO SSD 240GB KINGSTON A400 SATA III.png",
     "categoria": "Componentes"
   },
   {
     "id": 5,
-    "nombre": "MICRO AMD RYZEN 5 4600G 4.2 GHZ AM4",
-    "precio": 135.139,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "MICRO AMD RYZEN 5 4600G 4.2 GHZ AM4",
+    "price": 135.139,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/public/img/MICRO AMD RYZEN 5 4600G 4.2 GHZ AM4.png",
     "categoria": "Componentes"
   },
   {
     "id": 6,
-    "nombre": "MONITOR 25 GIGABYTE AORUS FI25F GAMING IPS",
-    "precio": 342.576,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "MONITOR 25 GIGABYTE AORUS FI25F GAMING IPS",
+    "price": 342.576,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/src/public/img/MONITOR 25 GIGABYTE AORUS FI25F GAMING IPS.png",
     "categoria": "Perifericos"
   },
   {
     "id": 7,
-    "nombre": "MOUSEPAD LISO TRUST PAD-100",
-    "precio": 5.126,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "MOUSEPAD LISO TRUST PAD-100",
+    "price": 5.126,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/public/img/PAD MOUSE M TRUST.png",
     "categoria": "Perifericos"
   },
   {
     "id": 8,
-    "nombre": "MOTHER BIOSTAR H61MHV3 DDR3 SOCKET",
-    "precio": 45.255,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "MOTHER BIOSTAR H61MHV3 DDR3 SOCKET",
+    "price": 45.255,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/public/img/MOTHER BIOSTAR H61MHV3 DDR3 SOCKET.png",
     "categoria": "Componentes"
   },
   {
     "id": 9,
-    "nombre": "TECLADO LOGITECH PRO X TKL LIGHTSPEED WHITE",
-    "precio": 250.742,
-    "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "title": "TECLADO LOGITECH PRO X TKL LIGHTSPEED WHITE",
+    "price": 250.742,
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "imagen": "../src/public/img/TECLADO LOGITECH PRO X TKL LIGHTSPEED WHITE.png",
     "categoria": "Perifericos"
   }

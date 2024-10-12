@@ -14,16 +14,16 @@
         <input type="text" id="product-code" placeholder="Código" required>
         <input type="number" id="product-price" placeholder="Precio" required>
         <input type="number" id="product-stock" placeholder="Stock" required>
-        <input type="text" id="product-category"  placeholder="Categoría" required>
+        <input type="text" id="product-category" placeholder="Categoría" required>
         <button type="submit">Agregar producto</button>
     </form>
 
     <ul id="product-list">
         {{#each products}}
         <li id="product-{{id}}">
-            <h2>{{nombre}}</h2>
-            <p>Precio: ${{precio}}</p>
-            <p>{{descripcion}}</p>
+            <h2>{{title}}</h2>
+            <p>Precio: ${{price}}</p>
+            <p>{{description}}</p>
             <button onclick="deleteProduct('{{id}}')">Eliminar</button>
         </li>
         {{/each}}
@@ -33,50 +33,48 @@
     <script>
         const socket = io();
 
-        socket.on('updateProducts', (products) => {
-            const productlist = document.getElementById('product-list');
-            productlist.innerHTML = '';
+        socket.on('actualizarProductos', (products) => {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
             products.forEach((product) => {
                 const productItem = `
                 <li id="product-${product.id}">
-                <h2>${product.nombre}</h2>
-                <p> precio: $${product.precio}</p>
-                <p>  ${product.descripcion}</p>
-                <button  onclick="deleteProduct(${product.id})">Eliminar</button>
+                    <h2>${product.title}</h2>
+                    <p>Precio: $${product.price}</p>
+                    <p>${product.description}</p>
+                    <button onclick="deleteProduct('${product.id}')">Eliminar</button>
                 </li>
                 `;
-                productlist.innerHTML += productItem;
+                productList.innerHTML += productItem;
             });
         });
-        function deleteProduct(index) {
-            socket.emit('deleteProduct', index);
+
+        function deleteProduct(productId) {
+            socket.emit('deleteProduct', productId);
         }
 
-        // Manejar el envío del formulario para agregar un producto
         document.getElementById('product-form').addEventListener('submit', (e) => {
-            event.preventDefault();
+            e.preventDefault();
 
-            // Obtener los valores del formulario
-            const title =  document.getElementById('product-title').value;
-            const descripcion = document.getElementById('product-description').value;
+            const title = document.getElementById('product-title').value;
+            const description = document.getElementById('product-description').value;
             const code = document.getElementById('product-code').value;
             const price = document.getElementById('product-price').value;
             const stock = document.getElementById('product-stock').value;
             const category = document.getElementById('product-category').value;
 
-            //Enviar el nuevo producto al servidor
             socket.emit('addProduct', {
+                title,
+                description,
+                code,
+                price,
+                stock,
+                category,
+                status: true
+            });
 
-            title,
-            descripcion,
-            code,
-            price,
-            stock,
-            category
-            })
-        }
-
-        document.getElementById('product-form').reset();
+            document.getElementById('product-form').reset();
+        });
     </script>
 </body>
 </html>

@@ -84,19 +84,53 @@ fs.readFile(filePath,  'utf8', (err, data) => {
 });
 
 //Escuchar la eliminacion de productos
-socket.on('deleteProduct', (index) => {
+socket.on('deleteProduct', (productId) => {
+    console.log('Eliminar producto con ID:', productId); // Verifica el ID que llega
     const filePath = path.join(process.cwd(), 'data', 'productos.json');
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (!err) {
-            const products = JSON.parse(data);
-            products.splice(index, 1);
+            let products = JSON.parse(data);
+            // Filtrar productos y eliminar el que coincide con el ID
+            products = products.filter(product => product.id !== parseInt(productId));
+            // Guardar los productos actualizados en el archivo
             fs.writeFile(filePath, JSON.stringify(products, null, 2), (err) => {
                 if (err) throw err;
-                io.emit('actualizarProductos', products)
+                // Emitir la lista actualizada de productos a todos los clientes
+                io.emit('actualizarProductos', products);
             });
         }
     });
 });
+
+
+// Escuchar la adición de nuevos productos
+socket.on('addProduct', (newProduct) => {
+    const filePath = path.join(process.cwd(), 'data', 'productos.json');
+    fs.readFile(filePath, 'utf8', (err, data) => { 
+        if (!err) {
+            const products = JSON.parse(data);
+
+            // Generar un nuevo ID único
+            const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
+
+            const productToAdd = {
+                id: newId,
+                ...newProduct,
+                status: true
+            };
+            products.push(productToAdd);
+
+            // Escribir el archivo con los productos actualizados
+            fs.writeFile(filePath, JSON.stringify(products, null, 2), (err) => {
+                if (err) throw err;
+
+                // Emitir la lista actualizada de productos a todos los clientes
+                io.emit('actualizarProductos', products);
+            });
+        }
+    });
+});
+
 
     // Manejar la desconexión del cliente
     socket.on('disconnect', () => {
