@@ -85,7 +85,7 @@ fs.readFile(filePath,  'utf8', (err, data) => {
 
 //Escuchar la eliminacion de productos
 socket.on('deleteProduct', (productId) => {
-    console.log('Eliminar producto con ID:', productId); // Verifica el ID que llega
+    console.log('Producto eliminado con ID:', productId); // Verifica el ID que llega
     const filePath = path.join(process.cwd(), 'data', 'productos.json');
     fs.readFile(filePath, 'utf8', (err, data) => {
         if (!err) {
