@@ -1,133 +1,116 @@
 import express from 'express';
-import fs from  'fs';
-import path from 'path';
+import productModel from  '../dao/models/product.models.js';
 
 const router = express.Router();
-const filePath = path.join(process.cwd(), 'data', 'productos.json');
 
-//TODO: Función auxiliar para leer productos desde un archivo
-const leerProductosDesdeArchivo = () => {
+router.get('/', async (req, res) => {
     try {
-        const data = fs.readFileSync(filePath,  'utf8');
-        return JSON.parse(data);
-    } catch (err) {
-        console.error('Error al leer el archivo:', err);
-        return[];
+        const products = await productModel.find().lean();
+        res.json(products);
+    } catch  (err) {
+        res.status(500).json({message: 'Error al obtener los productos', error: err})
     }
-}
+});
 
-//TODO:  Función auxiliar para escribir productos en un archivo
-const escribirProductosEnArchivo = (products) => {
+// TODO: Ruta para obtener un producto por ID
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+
     try {
-        fs.writeFileSync(filePath, JSON.stringify(products, null, 2));
+        // Buscar el producto por ID
+        const product = await productModel.findById(id);
+
+        if (product) {
+            res.json(product); // Devolver el producto encontrado
+        } else {
+            res.status(404).json({ message: 'Producto no encontrado' });
+        }
     } catch (err) {
-        console.error('Error al escribir en el archivo:', err);
-    }
-};
-
-router.get('/', (req, res) => {
-    const products = leerProductosDesdeArchivo();
-    const productId = parseInt(req.params.pid, 10);
-    const product =  products.find((product) => product.id === productId);
-
-    if (product) {
-        res.json(product);
-    } else {
-        res.status(404).json({ message: 'Producto no encontrado' });
-    }
-
-})
-
-//TODO: Ruta para obtener un producto por ID
-router.get('/:pid', (req, res) => {
-    const products = leerProductosDesdeArchivo();
-    const productId = parseInt(req.params.pid, 10);
-    const product = products.find((product) => product.id === productId);
-
-    if (product) {
-        res.json(product);
-    } else {
-        res.status(404).json({ message: 'Producto no encontrado' });
+        // Manejo de errores
+        res.status(500).json({ message: 'Error al obtener el producto', error: err });
     }
 });
 
 //TODO: Ruta para agregar productos
-router.post('/',  (req, res) => {
-    const products  = leerProductosDesdeArchivo();
-    const {nombre, descripcion, code, precio, stock, categoria, imagen = []} = req.body;
+router.post('/', async (req, res) => {
+    const { title, price, stock, description, image, categoria } = req.body;
 
-    if (!nombre || !descripcion || !code || !precio || !stock || !categoria) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios.'})
+    // Validar que todos los campos obligatorios estén presentes
+    if (!title ||  !price || !stock || !description || !categoria) {
+
+        return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
     }
 
-    // Generar un nuevo ID
-    const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
+    // Verificar si ya existe un producto con el mismo código
+    const existingProduct = await productModel.findOne({ code });
+    if (existingProduct) {
+        return res.status(409).json({ message: 'El código del producto ya existe.' });
+    }
 
-    const newProduct = {
-        id: newId,
-        nombre,
-        descripcion,
-        code,
-        precio,
-        status: true,
+    // Crear un nuevo producto usando el modelo de Mongoose
+    const newProduct = new productModel({
+        title,
+        price,
         stock,
-        categoria,
-        imagen
-    };
+        description,
+        image,
+        categoria
+    });
 
-    // Agregar el nuevo producto a la lista
-    products.push(newProduct);
-    escribirProductosEnArchivo(products)
-    res.status(201).json(newProduct); // Devuelve el nuevo producto creado
+    try {
+        const createdProduct = await newProduct.save(); // Guardar el nuevo producto en la base de datos
+        res.status(201).json(createdProduct); // Devuelve el nuevo producto creado
+    } catch (err) {
+        res.status(500).json({ message: 'Error al agregar el producto', error: err });
+    }
+});
 
-})
+// TODO: Ruta para actualizar un producto
+router.put('/:id', async (req, res) => {
+    const { id } = req.params; // Obtenemos el ID del producto de los parámetros de la URL
+    const { title, price, stock, description, image, categoria } = req.body; // Extraemos los campos del cuerpo de la solicitud
 
-//TODO: Ruta para actualizar un producto 
-router.put('/:pid', (req, res) => {
-    const products  = leerProductosDesdeArchivo();
-    const productId = parseInt(req.params.pid, 10);
-    const  productIndex = products.findIndex(product => product.id === productId);
-    
-    if(productIndex === -1) {
-        return res.status(404).json({ message: 'Producto no encontrado' });
+    // Verificar si todos los campos requeridos están presentes
+    if (!title ||  !price || !stock || !description || !categoria) {
+
+        return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
     }
 
-    const {nombre, descripcion, code, precio, stock, categoria, imagen = []} = req.body;
+    try {
+        // Actualizar el producto en la base de datos por su ID
+        const updatedProduct = await productModel.findByIdAndUpdate(
+            id,
+            { title, stock, price, description, image, categoria },
+            { new: true } // Opción `new: true` para devolver el producto actualizado
+        );
 
-    if (!nombre || !descripcion || !code ||  !precio || !stock || !categoria) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios.'});
+        // Si el producto no se encuentra
+        if (!updatedProduct) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        // Devolver el producto actualizado
+        res.json(updatedProduct);
+    } catch (err) {
+        // Manejo de errores
+        res.status(500).json({ message: 'Error al actualizar el producto', error: err });
     }
-
-    products[productIndex] = {
-        ...products[productIndex], // Mantener las propiedades existentes que no cambian
-        nombre,
-        descripcion,
-        code,
-        precio,
-        stock,
-        categoria,
-        imagen
-    };
-
-    escribirProductosEnArchivo(products);
-    res.json(products[productIndex]); // Devolver el producto actualizado
-
 });
 
 //TODO: Ruta para eliminar un producto por ID
-router.delete('/:pid', (req, res) => {
-    const products  = leerProductosDesdeArchivo();
-    const productId = parseInt(req.params.pid, 10);
-    const index = products.findIndex(product => product.id === productId);
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
 
-    if (index > -1) {
-        products.splice(index, 1); // Elimina el producto
-        escribirProductosEnArchivo(products);
-        res.status(200).json({ message: 'Producto eliminado exitosamente' });
-    } else {
-        res.status(404).json({ message: 'Producto no encontrado' });
+    try{
+        const deletedProduct = await productModel.findByIdAndDelete(id);
+        if (deletedProduct) {
+            res.status(200).json({message: 'Producto eliminado exitosamente'});
+        } else {
+            res.status(404).json({message: 'Producto no encontrado'});
+        }
+    } catch (err) {
+        res.status(500).json({message: 'Error al eliminar el producto', error: err});
     }
 });
-
 
 export default router;

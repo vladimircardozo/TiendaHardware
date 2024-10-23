@@ -5,16 +5,22 @@ import http from 'http';
 import productsRouter from './routes/products.js';
 import cartsRouter from './routes/carts.js';
 import path from 'path';
-import { promises as fs } from 'fs';
+import mongoose from 'mongoose';
+import Product from './dao/models/product.models.js';
 
 const PORT = 8080;
 const app = express();
 const server = http.createServer(app); // Crea un servidor HTTP
 const io = new socketIOserver(server); // Inicializa Socket.IO con el servidor
+const MONGODB_URI=  'mongodb+srv://coder70275:coder2024@vcardozo.kqs8k.mongodb.net/coder70275'
 
 // Configuración del motor Handlebars
 const hbs = create({
     extname: '.handlebars',
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true, // Permite acceder a las propiedades del prototipo
+        allowProtoMethodsByDefault: true     // Permite acceder a los métodos del prototipo
+    }
 });
 
 app.engine('.handlebars', hbs.engine);
@@ -34,72 +40,53 @@ app.use('/api/carts', cartsRouter);
 
 // Ruta para mostrar productos en la vista Handlebars
 app.get('/products', async (req, res) => {
-    const filePath = path.join(process.cwd(), 'data', 'productos.json');
-    try {
-        const data = await fs.readFile(filePath, 'utf8');
-        const products = JSON.parse(data); // Intenta parsear los datos JSON
-        res.render('index', { products }); // Renderiza la vista con los productos
-    } catch (err) {
-        console.error('Error al leer el archivo:', err);
-        return res.status(500).json({ message: 'Error al cargar productos', error: err.message });
+    try{
+        const products = await  Product.find();
+        res.render('index', {products});
+    } catch(err) {
+        console.error('Error al cargar los productos desde la base de datos:', err)
+        return res.status(500).json({ message: 'Error al cargar productos', error: err.message })
     }
 });
 
 // Ruta para mostrar productos en tiempo real
 app.get('/realtimeproducts', async (req, res) => {
-    const filePath = path.join(process.cwd(), 'data', 'productos.json');
     try {
-        const data = await fs.readFile(filePath, 'utf8');
-        const products = JSON.parse(data);
-        res.render('realTimeProducts', { products });
+        const products = await Product.find();
+        res.render('realTimeProducts', { products })
     } catch (err) {
-        console.error('Error al leer el archivo:', err);
-        return res.status(500).json({ message: 'Error al cargar productos', error: err.message });
+        console.error('Error al cargar los productos desde la base de datos:', err);
+        return res.status(500).json({ message: 'Error al cargar productos', error: err.message})
     }
 });
 
 // Configuración de Socket.IO
 io.on('connection', async (socket) => {
     console.log('Nuevo cliente conectado');
-
-    // Enviar productos en tiempo real cuando un nuevo cliente se conecta
-    const filePath = path.join(process.cwd(), 'data', 'productos.json');
     try {
-        const data = await fs.readFile(filePath, 'utf8');
-        const products = JSON.parse(data);
+        const  products = await Product.find();
         socket.emit('actualizarProductos', products);
     } catch (err) {
-        console.error('Error al leer los productos:', err);
+        console.error('Error al obtener productos:', err);
     }
 
-    // Escuchar la eliminación de productos
+    // Eliminar productos
     socket.on('deleteProduct', async (productId) => {
-        console.log('Producto eliminado con ID:', productId); // Verifica el ID que llega
-        try {
-            const data = await fs.readFile(filePath, 'utf8');
-            let products = JSON.parse(data);
-            products = products.filter((product) => product.id !== parseInt(productId));
-
-            await fs.writeFile(filePath, JSON.stringify(products, null, 2));
+        try{
+            await Product.findByIdAndDelete(productId);
+            const products = await Product.find();
             io.emit('actualizarProductos', products);
         } catch (err) {
-            console.error('Error al eliminar producto:', err);
+            console.error('Error al eliminar productos:', err);
         }
     });
 
     // Escuchar la adición de nuevos productos
     socket.on('addProduct', async (newProduct) => {
         try {
-            const data = await fs.readFile(filePath, 'utf8');
-            const products = JSON.parse(data);
-
-            // Generar un nuevo ID único
-            const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
-            const productToAdd = { id: newId, ...newProduct, status: true };
-
-            products.push(productToAdd);
-
-            await fs.writeFile(filePath, JSON.stringify(products, null, 2));
+            const productToAdd = new Product(newProduct);
+            await productToAdd.save(); // Guarda el nuevo producto en MongoDB
+            const products = await Product.find(); // Consulta productos actualizados
             io.emit('actualizarProductos', products);
         } catch (err) {
             console.error('Error al añadir producto:', err);
@@ -113,6 +100,11 @@ io.on('connection', async (socket) => {
 });
 
 // Iniciar el servidor en el puerto especificado
-server.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}`);
+server.listen(PORT, async () => {
+    try {
+        await mongoose.connect(MONGODB_URI);
+        console.log(`Servidor escuchando en el puerto ${PORT} conectado a bbdd`);
+    } catch (err) {
+        console.error('Error al conectar a la base de datos:', err);
+    }
 });
