@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
 
-        const { limit = 9, page = 1, sort, query } = req.query;
+        const { limit = 10, page = 1, sort, query } = req.query;
 
         console.log('Limit:', limit);
 
