@@ -5,8 +5,54 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const products = await productModel.find().lean();
-        res.json(products);
+
+        const { limit = 9, page = 1, sort, query } = req.query;
+
+        console.log('Limit:', limit);
+
+        let filter = {};
+        
+        if(query) {
+            filter = {
+            $or: [
+                {title: {$regex: query, $options: 'i'}},
+                {category: {$regex: query, $options: 'i'}}
+            ]
+          };
+        }
+        
+        let sortOptions =  {};
+        if (sort) {
+            // Si 'sort' es 'asc', ordenar en orden ascendente; si es 'desc', en orden descendente
+            sortOptions.price = sort === 'asc' ? 1 : -1;
+        }
+
+        // Realizar la búsqueda con paginación y posible ordenamiento
+        const products = await productModel
+        .find(filter)
+        .sort(sortOptions)
+        .limit(parseInt(limit))
+        .skip((parseInt(page) -1) * parseInt(limit)) // Saltar los productos de páginas anteriores
+        .lean();
+
+        // total de productos que coinciden con el filtro
+        const totalProducts = await productModel.countDocuments(filter);
+
+        // Calcular el total de páginas
+        const totalPages = Math.ceil(totalProducts / parseInt(limit));
+
+        res.json({
+            status: 'success',
+            payload: products,
+            totalProducts,
+            totalPages,
+            currentPage: parseInt(page),
+            hasPrevPage: parseInt(page) > 1,
+            hasNextPage: parseInt(page) < totalPages,
+            prevPage: parseInt(page) > 1 ? parseInt(page) - 1 : null,
+            nextPage: parseInt(page) < totalPages ? parseInt(page) + 1 : null     
+        });
+
     } catch  (err) {
         res.status(500).json({message: 'Error al obtener los productos', error: err})
     }
@@ -33,10 +79,11 @@ router.get('/:id', async (req, res) => {
 
 //TODO: Ruta para agregar productos
 router.post('/', async (req, res) => {
-    const { title, price, stock, description, image, categoria } = req.body;
+    const { title, price, stock, description, image, category, code } = req.body;
 
     // Validar que todos los campos obligatorios estén presentes
-    if (!title ||  !price || !stock || !description || !categoria) {
+    if (!title ||  !price || !stock || !description || !category  || !code) {
+
 
         return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
     }
@@ -54,7 +101,8 @@ router.post('/', async (req, res) => {
         stock,
         description,
         image,
-        categoria
+        category,
+        code
     });
 
     try {
@@ -68,10 +116,11 @@ router.post('/', async (req, res) => {
 // TODO: Ruta para actualizar un producto
 router.put('/:id', async (req, res) => {
     const { id } = req.params; // Obtenemos el ID del producto de los parámetros de la URL
-    const { title, price, stock, description, image, categoria } = req.body; // Extraemos los campos del cuerpo de la solicitud
+    const { title, price, stock, description, image, category, code } = req.body; // Extraemos los campos del cuerpo de la solicitud
 
     // Verificar si todos los campos requeridos están presentes
-    if (!title ||  !price || !stock || !description || !categoria) {
+    if (!title ||  !price || !stock || !description || !category   || !code) {
+
 
         return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
     }
@@ -80,7 +129,8 @@ router.put('/:id', async (req, res) => {
         // Actualizar el producto en la base de datos por su ID
         const updatedProduct = await productModel.findByIdAndUpdate(
             id,
-            { title, stock, price, description, image, categoria },
+            { title, stock, price, description, image, category,  code },
+
             { new: true } // Opción `new: true` para devolver el producto actualizado
         );
 
