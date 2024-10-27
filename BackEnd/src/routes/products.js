@@ -6,20 +6,24 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
 
-        const { limit = 10, page = 1, sort, query } = req.query;
+        const { limit = 10, page = 1, sort, query, availability } = req.query;
 
         console.log('Limit:', limit);
 
         let filter = {};
         
         if(query) {
-            filter = {
-            $or: [
-                {title: {$regex: query, $options: 'i'}},
-                {category: {$regex: query, $options: 'i'}}
+             
+            filter.$or = [
+                {category: {$regex: query, $options: 'i'}},
+                {title: {$regex: query, $options: 'i'}}
             ]
           };
-        }
+
+          if (availability) {
+            filter.stock = availability === 'true' ? { $gt: 0 } : 0; // Productos disponibles o no
+          }
+        
         
         let sortOptions =  {};
         if (sort) {
@@ -35,22 +39,28 @@ router.get('/', async (req, res) => {
         .skip((parseInt(page) -1) * parseInt(limit)) // Saltar los productos de páginas anteriores
         .lean();
 
-        // total de productos que coinciden con el filtro
-        const totalProducts = await productModel.countDocuments(filter);
+        const totalProducts = await productModel.countDocuments(filter); // total de productos que coinciden con el filtro
+        const totalPages = Math.ceil(totalProducts / parseInt(limit)); // Calcular el total de páginas
 
-        // Calcular el total de páginas
-        const totalPages = Math.ceil(totalProducts / parseInt(limit));
+        //Enlaces previos al siguente 
+        const prevPage = parseInt(page) > 1 ? parseInt(page) - 1 : null
+        const nextPage = parseInt(page) < totalPages ? parseInt(page) + 1 : null;
+        const prevLink = prevPage ? `/products?limit=${limit}&page=${prevPage}&sort=${sort}&query=${query}&availability=${availability}`  : null;
+        const nextLink =  nextPage ? `/products?limit=${limit}&page=${nextPage}&sort=${sort}&query=${query}&availability=${availability}` : null;
+
 
         res.json({
             status: 'success',
             payload: products,
             totalProducts,
             totalPages,
-            currentPage: parseInt(page),
-            hasPrevPage: parseInt(page) > 1,
-            hasNextPage: parseInt(page) < totalPages,
-            prevPage: parseInt(page) > 1 ? parseInt(page) - 1 : null,
-            nextPage: parseInt(page) < totalPages ? parseInt(page) + 1 : null     
+            page: parseInt(page),
+            hasPrevPage: prevPage !==  null,
+            hasNextPage: nextPage !== null,
+            prevPage,
+            nextPage,
+            prevLink,
+            nextLink
         });
 
     } catch  (err) {
