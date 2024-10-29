@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del producto</title>
+</head>
+<body>
+    <h1>{{product.title}}</h1>
+    <p><strong>Descripción</strong>{{product.description}}</p>
+    <p><strong>Precio:</strong>${{product.price}}</p>
+    <p><strong>Categoría:</strong>{{product.category}}</p>
+
+    <button  onclick="addToCart('{{product._id}}')">Agregar al carrito</button>
+
+    <a href="/products">Volver a la lista de productos</a>
+
+    <script>
+        async function addToCart(productId) {
+            const cartId = 'YOUR_CART_ID'
+            try {
+                const response  = await fetch(`/api/carts/${cartId}/products/${productId}`, { 
+                    method:  'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({productId})
+                });
+
+                if (response.ok) {
+                    alert('Producto agregado al carrito!');
+                } else {
+                    alert('Error al agregar producto al carrito');
+                }
+            } catch (error) {
+                console.error('Error al agregar al carrito', error);
+                alert('Error al agregar el producto al carrito.');
+            }
+        }
+    </script>
+</body>
+</html>

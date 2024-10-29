@@ -60,6 +60,20 @@ app.get('/realtimeproducts', async (req, res) => {
     }
 });
 
+// Ruta para mostrar detalles de un producto específico
+app.get('/products/:pid', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.pid);
+        if (!product) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+        res.render('productDetail',  { product });
+    } catch (err) {
+        console.error('Error al cargar el producto', err);
+        return res.status(500).json({ message: 'Error al cargar producto', error: err})
+    }
+});
+
 // Configuración de Socket.IO
 io.on('connection', async (socket) => {
     console.log('Nuevo cliente conectado');
