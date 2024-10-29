@@ -17,26 +17,41 @@
 
     <script>
         async function addToCart(productId) {
-            const cartId = 'YOUR_CART_ID'
-            try {
-                const response  = await fetch(`/api/carts/${cartId}/products/${productId}`, { 
-                    method:  'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({productId})
-                });
+    let cartId = 'YOUR_CART_ID'; // Inicialmente define un ID de carrito
+    try {
+        const cartResponse = await fetch(`/api/carts/${cartId}`);
 
-                if (response.ok) {
-                    alert('Producto agregado al carrito!');
-                } else {
-                    alert('Error al agregar producto al carrito');
-                }
-            } catch (error) {
-                console.error('Error al agregar al carrito', error);
-                alert('Error al agregar el producto al carrito.');
-            }
+        if (!cartResponse.ok) {
+            const newCartResponse = await fetch(`/api/carts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const newCart = await newCartResponse.json();
+            cartId = newCart._id; // Almacena el nuevo ID de carrito
         }
+
+        // Ahora agrega el producto al carrito
+        const response = await fetch(`/api/carts/${cartId}/products/${productId}`, { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId })
+        });
+
+        if (response.ok) {
+            alert('Producto agregado al carrito!');
+        } else {
+            alert('Error al agregar producto al carrito');
+        }
+    } catch (error) {
+        console.error('Error al agregar al carrito', error);
+        alert('Error al agregar el producto al carrito.');
+    }
+}
     </script>
 </body>
 </html>
