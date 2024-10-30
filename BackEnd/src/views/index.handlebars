@@ -34,7 +34,7 @@
     </script>
     <script>
     async function addToCart(productId) {
-    let cartId = localStorage.getItem('cartId') || 'DEFAULT_CART_ID';
+    const cartId = localStorage.getItem('cartId') || 'DEFAULT_CART_ID';
     try {
         let cartResponse = await fetch(`/api/carts/${cartId}`);
 
