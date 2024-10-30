@@ -1,6 +1,6 @@
 import express from 'express';
 import Cart from '../dao/models/carts.models.js'
-
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
