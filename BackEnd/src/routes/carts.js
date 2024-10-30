@@ -53,7 +53,8 @@ router.post('/:cid/products/:pid', async (req, res) => {
       if (productIndex !== -1) {
           cart.products[productIndex].quantity += 1;
       } else {
-          cart.products.push({ productId: pid, quantity: 1, ...product.toObject() });
+        cart.products.push({ productId: pid, quantity: 1, name: product.name, price: product.price });
+
       }
       await cart.save();
       res.status(200).json(cart);
