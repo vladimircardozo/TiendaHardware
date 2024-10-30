@@ -1,6 +1,7 @@
 import express from 'express';
 import Cart from '../dao/models/carts.models.js'
 import mongoose from 'mongoose';
+import product from '../dao/models/product.models.js'
 
 const router = express.Router();
 
@@ -52,7 +53,7 @@ router.post('/:cid/products/:pid', async (req, res) => {
       if (productIndex !== -1) {
           cart.products[productIndex].quantity += 1;
       } else {
-          cart.products.push({ productId: pid, quantity: 1 });
+          cart.products.push({ productId: pid, quantity: 1, ...product.toObject() });
       }
       await cart.save();
       res.status(200).json(cart);
