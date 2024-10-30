@@ -31,9 +31,17 @@ router.post('/', async (req, res) => {
   }
 });
 
+function isValidObjectId(id) {
+  return mongoose.Types.ObjectId.isValid(id);
+}
+
 //TODO: Ruta  para agregar un producto a un carrito
 router.post('/:cid/products/:pid', async (req, res) => {
   const { cid, pid } = req.params;
+
+  if (!isValidObjectId(cid) || !isValidObjectId(pid)) {
+    return res.status(400).json({ message: 'ID invalido para cart o product' });
+}
 
   try {
       const cart = await Cart.findById(cid);
@@ -52,9 +60,6 @@ router.post('/:cid/products/:pid', async (req, res) => {
       res.status(500).json({ message: 'Error al agregar el producto al carrito', error });
   }
 });
-
-
-
 
 //TODO: api/carts/:cid - Eliminar todos los productos del carrito especificado
 router.delete('/:cid', async (req, res) => {

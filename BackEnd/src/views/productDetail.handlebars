@@ -19,7 +19,7 @@
         async function addToCart(productId) {
     let cartId = 'YOUR_CART_ID'; // Inicialmente define un ID de carrito
     try {
-        const cartResponse = await fetch(`/api/carts/${cartId}`);
+    const cartResponse = await fetch(`/api/carts/${cartId}`);
 
         if (!cartResponse.ok) {
             const newCartResponse = await fetch(`/api/carts`, {

@@ -27,7 +27,6 @@
         </li>
       {{/each}}
     </ul>
-    {{!-- Controles de paginación --}}
     </div>
     <script src='/socket.io/socket.io.js'></script>
     <script>
@@ -35,33 +34,24 @@
     </script>
     <script>
     async function addToCart(productId) {
-    // Verifica si existe un `cartId` almacenado en localStorage
-    let cartId = localStorage.getItem('cartId');
-
+    let cartId = localStorage.getItem('cartId') || 'DEFAULT_CART_ID';
     try {
-        // Si `cartId` no está en localStorage, crea un nuevo carrito
-        if (!cartId) {
+        let cartResponse = await fetch(`/api/carts/${cartId}`);
+
+        if (!cartResponse.ok) {
             const newCartResponse = await fetch(`/api/carts`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            if (!newCartResponse.ok) {
-                throw new Error('No se pudo crear un carrito');
-            }
-
             const newCart = await newCartResponse.json();
             cartId = newCart._id;
-
-            // Almacena `cartId` en localStorage
-            localStorage.setItem('cartId', cartId);
+            localStorage.setItem('cartId', cartId); // Guardamos el nuevo ID
         }
 
-        // Ahora, realiza la solicitud para agregar el producto al carrito
-        const response = await fetch(`/api/carts/${cartId}/products/${productId}`, { 
+        const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productId }) // Este JSON es opcional en tu ruta, ya que el ID está en la URL.
         });
 
         if (response.ok) {
@@ -70,11 +60,10 @@
             alert('Error al agregar producto al carrito');
         }
     } catch (error) {
-        console.error('Error al agregar al carrito:', error);
+        console.error('Error al agregar al carrito', error);
         alert('Error al agregar el producto al carrito.');
     }
 }
-
 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
