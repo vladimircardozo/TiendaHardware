@@ -58,6 +58,8 @@ router.post('/:cid/products/:pid', async (req, res) => {
       await cart.save();
       res.status(200).json(cart);
   } catch (error) {
+    console.error('Error al agregar producto al carrito', error);
+
       res.status(500).json({ message: 'Error al agregar el producto al carrito', error });
   }
 });
