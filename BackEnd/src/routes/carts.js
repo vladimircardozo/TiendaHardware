@@ -9,14 +9,18 @@ const router = express.Router();
 //TODO: Ruta para obtener los datos de un carrito por su ID
 router.get('/:cid', async (req, res) => {
   try {
+    console.log("Buscando carrito con ID:", req.params.cid);
     const cart = await Cart.findById(req.params.cid).populate('products.productId');
     if (cart) {
+      console.log("Carrito encontrado:", cart);
       res.json(cart);
     } else {
+      console.log("Carrito no encontrado");
       res.status(404).json({ message: 'Carrito no encontrado' })
     }
 
   }catch (error) {
+    console.error("Error al obtener el carrito:", error);
     res.status(500).json({ message: 'Error al obtener el carrito' });
   }
 });
