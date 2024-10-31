@@ -1,12 +1,9 @@
-import mongoose from  'mongoose';
+import mongoose from 'mongoose';
 
-//Anulamos comportamiento de renombre por defecto de colecciones
 mongoose.pluralize(null);
 
-//Indicamos colección 
 const collection = 'products';
 
-//Generamos esquema
 const schema = new mongoose.Schema({
     title: { type: String, required: true },
     price: { type: Number, required: true },
@@ -15,9 +12,8 @@ const schema = new mongoose.Schema({
     image: { type: String },
     categoria: { type: String, required: true },
     status: { type: Boolean, default: true }
-})
+});
 
-//Generamos model
-const model = mongoose.model(collection, schema);
+const Product = mongoose.model(collection, schema);
 
-export default model;
+export default Product;

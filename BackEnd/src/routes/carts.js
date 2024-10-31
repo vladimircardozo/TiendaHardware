@@ -1,10 +1,9 @@
 import express from 'express';
 import Cart from '../dao/models/carts.models.js'
 import mongoose from 'mongoose';
-import product from '../dao/models/product.models.js'
+import Product from '../dao/models/product.models.js'
 
 const router = express.Router();
-
 
 //TODO: Ruta para obtener los datos de un carrito por su ID
 router.get('/:cid', async (req, res) => {
@@ -16,10 +15,10 @@ router.get('/:cid', async (req, res) => {
       res.json(cart);
     } else {
       console.log("Carrito no encontrado");
-      res.status(404).json({ message: 'Carrito no encontrado' })
+      res.status(404).json({ message: 'Carrito no encontrado' });
     }
 
-  }catch (error) {
+  } catch (error) {
     console.error("Error al obtener el carrito:", error);
     res.status(500).json({ message: 'Error al obtener el carrito' });
   }
@@ -46,26 +45,31 @@ router.post('/:cid/products/:pid', async (req, res) => {
 
   if (!isValidObjectId(cid) || !isValidObjectId(pid)) {
     return res.status(400).json({ message: 'ID invalido para cart o product' });
-}
+  }
 
   try {
-      const cart = await Cart.findById(cid);
-      if (!cart) return res.status(404).json({ message: 'Carrito no encontrado' });
+    const cart = await Cart.findById(cid);
+    if (!cart) return res.status(404).json({ message: 'Carrito no encontrado' });
 
-      const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
+    // Buscar el producto en la base de datos usando el modelo correcto
+    const productData = await Product.findById(pid);
+    if (!productData) return res.status(404).json({ message: 'Producto no encontrado' });
 
-      if (productIndex !== -1) {
-          cart.products[productIndex].quantity += 1;
-      } else {
-        cart.products.push({ productId: pid, quantity: 1, name: product.name, price: product.price });
+    const productIndex = cart.products.findIndex(p => p.productId.toString() === pid);
 
-      }
-      await cart.save();
-      res.status(200).json(cart);
+    if (productIndex !== -1) {
+      // Si el producto ya está en el carrito, solo aumentamos la cantidad
+      cart.products[productIndex].quantity += 1;
+    } else {
+      // Si el producto no está en el carrito, lo agregamos con su nombre y precio
+      cart.products.push({ productId: pid, quantity: 1, name: productData.name, price: productData.price });
+    }
+
+    await cart.save();
+    res.status(200).json(cart);
   } catch (error) {
     console.error('Error al agregar producto al carrito', error);
-
-      res.status(500).json({ message: 'Error al agregar el producto al carrito', error });
+    res.status(500).json({ message: 'Error al agregar el producto al carrito', error });
   }
 });
 
