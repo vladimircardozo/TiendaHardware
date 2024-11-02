@@ -1,0 +1,29 @@
+# Tienda Hardware Backend
+
+Este es el backend del proyecto **Tienda Hardware**, una aplicación para gestionar productos y carritos de compra en una tienda de hardware. La aplicación está construida con Node.js, Express, y MongoDB.
+
+## Descripción
+
+Este proyecto proporciona el backend de una tienda online que permite a los usuarios gestionar productos y carritos de compra. Implementa una API RESTful que permite a los clientes realizar operaciones CRUD (Crear, Leer, Actualizar y Eliminar) en productos y carritos, utilizando MongoDB para el almacenamiento de datos.
+
+## Tecnologías Utilizadas
+
+- **Node.js**: Entorno de ejecución para JavaScript en el servidor.
+- **Express**: Framework de Node.js para la creación de aplicaciones web y APIs.
+- **MongoDB**: Base de datos NoSQL orientada a documentos.
+- **Mongoose**: ODM para MongoDB y Node.js, utilizado para modelar datos y manejar las consultas.
+
+## Características
+
+- Gestión de productos (creación, lectura, actualización y eliminación).
+- Gestión de carritos de compra con productos y cantidades.
+- Relación entre productos y carritos usando MongoDB y Mongoose.
+- Endpoints para realizar operaciones en la tienda.
+- Estructura modular de código y documentación de la API.
+
+## Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/tu_usuario/tienda-hardware-backend.git
+   cd TiendaHardwareBackEnd
