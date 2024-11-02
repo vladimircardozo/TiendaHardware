@@ -26,4 +26,15 @@ Este proyecto proporciona el backend de una tienda online que permite a los usua
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/tu_usuario/tienda-hardware-backend.git
-   cd TiendaHardwareBackEnd
+   cd tienda-hardware-backend
+
+2. Instala las dependencias:
+   ```bash
+   npm install
+
+3. Configura las variables de entorno en un archivo .env:
+   MONGODB_URI=mongodb://localhost:27017/tienda_hardware
+   PORT=3000
+
+4. Inicia el servidor:
+   npm start
