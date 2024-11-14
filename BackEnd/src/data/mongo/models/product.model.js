@@ -10,7 +10,7 @@ const schema = new mongoose.Schema({
     stock: { type: Number, required: true },
     description: { type: String, required: true },
     image: { type: String },
-    categoria: { type: String, required: true },
+    category: { type: String, required: true },
     status: { type: Boolean, default: true }
 });
 
