@@ -41,7 +41,7 @@ const read = async ({limit = 10, page = 1, sort, query, availability} = {})  => 
             totalPages,
             page: parseInt(page),
             hasPrevPage: page > 1,
-            hastNextPage: parse < totalPages,
+            hasNextPage: parse < totalPages,
             prevPage: page > 1 ? page - 1 : null,
             nextPage: page < totalPages ? page + 1 : null
         };
@@ -60,7 +60,7 @@ const readById = async (id) => {
 
 const readByEmail = async (email) => {
     try {
-        const one = await this.model.findOne({ email }).lean()
+        const one = await Product.findOne({ email }).lean()
         return one
     } catch (error) {
         throw error
@@ -69,8 +69,8 @@ const readByEmail = async (email) => {
 
 const update = async (id, data) => {
     try {
-    const opt = { new: true }.lean() // devuelve el objeto luego de la configuración
-    const one  = await Product.findByIdAndUpdate(id, data, opt);
+    const opt = { new: true }
+    const one  = await Product.findByIdAndUpdate(id, data, opt).lean(); // devuelve el objeto luego de la configuración
     return  one;
     } catch (error) {
         throw error

@@ -35,7 +35,7 @@ app.use(session({
 
 //routers 
 app.use("/api/sessions", sessionsRouter);
-app.use(appRouter)
+app.use("/", appRouter);
 app.use(errorHandler);
 app.use(pathHandler);
 
