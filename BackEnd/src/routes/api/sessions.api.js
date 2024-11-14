@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { application, Router } from "express";
 import { create } from "../../data/mongo/managers/users.manager.js";
 import isVerifyPassword from "../../middlewares/isVerifyPassword.mid.js";
 import validateRequiredFields from "../../middlewares/validateRequiredFields.mid.js";
@@ -9,6 +9,10 @@ const sessionsRouter = Router();
 // Ruta para mostrar el formulario de registro
 sessionsRouter.get("/register", (req, res) => {
     res.render("sessions/register")
+});
+
+sessionsRouter.get("/login", (req, res) => {
+    res.render("sessions/login")
 });
 
 sessionsRouter.post("/register",

@@ -4,7 +4,6 @@ import CartApiRouter from "./carts.api.js"
 import CookiesRouter from "./cookies.api.js";
 import sessionsRouter from "./sessions.api.js"
 
-
 const apiRouter =  Router();
 
 apiRouter.use("/products",  ProductsApiRouter);
