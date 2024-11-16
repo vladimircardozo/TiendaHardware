@@ -1,8 +1,10 @@
 import { application, Router } from "express";
 import { create } from "../../data/mongo/managers/users.manager.js";
-import isVerifyPassword from "../../middlewares/isVerifyPassword.mid.js";
-import validateRequiredFields from "../../middlewares/validateRequiredFields.mid.js";
+import isValidUser from "../../middlewares/isValidUser.mid.js";
+import validateRequiredFields from "../../middlewares/isValidUser.mid.js";
 import checkUserExists from "../../middlewares/checkUserExists.mid.js";
+import createHash from "../../middlewares/createHash.mid.js";
+import verifyHash from "../../middlewares/verifyHash.mid.js";
 
 const sessionsRouter = Router();
 
@@ -15,8 +17,14 @@ sessionsRouter.get("/login", (req, res) => {
     res.render("sessions/login")
 });
 
+sessionsRouter.get("/signout", signout);
+
+sessionsRouter.get("/online", online)
+
 sessionsRouter.post("/register",
     validateRequiredFields,
+    checkUserExists,
+    createHash,
     async(req, res, next) => {
     
     try {
@@ -32,7 +40,8 @@ sessionsRouter.post("/register",
 sessionsRouter.post("/login",
     validateRequiredFields, 
     checkUserExists,
-    isVerifyPassword, 
+    verifyHash,
+    isValidUser, 
     (req, res, next) => {
     try {
         req.session.online = true;
