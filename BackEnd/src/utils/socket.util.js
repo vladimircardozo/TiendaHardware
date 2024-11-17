@@ -8,7 +8,7 @@ const setupSocket = (io) => {
             const products = await Product.find();
             socket.emit('actualizarProductos', products);
         } catch (error){
-            console.error('Error al obtener productos:', err);
+            console.error('Error al obtener productos:', error);
         }
 
         socket.on('deleteProduct', async (productId) => {

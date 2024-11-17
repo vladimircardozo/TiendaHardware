@@ -82,6 +82,7 @@ const destroy = async (id) => {
         const one = await Product.findByIdAndDelete(id)
         return  one;
     } catch (error) {
+        console.error("Error al eliminar el producto:", error);
         throw error
     }
 }
