@@ -1,10 +1,11 @@
-import { application, Router } from "express";
-import { create } from "../../data/mongo/managers/users.manager.js";
+import { Router } from "express";
+// import { create } from "../../data/mongo/managers/users.manager.js";
 import isValidUser from "../../middlewares/isValidUser.mid.js";
 import validateRequiredFields from "../../middlewares/isValidUser.mid.js";
 import checkUserExists from "../../middlewares/checkUserExists.mid.js";
-import createHash from "../../middlewares/createHash.mid.js";
-import verifyHash from "../../middlewares/verifyHash.mid.js";
+// import createHash from "../../middlewares/createHash.mid.js";
+// import verifyHash from "../../middlewares/verifyHash.mid.js";
+import passport from "../../middlewares/passport.mid.js";
 
 const sessionsRouter = Router();
 
@@ -17,21 +18,25 @@ sessionsRouter.get("/login", (req, res) => {
     res.render("sessions/login")
 });
 
-sessionsRouter.get("/signout", signout);
+sessionsRouter.get("/signout", (req, res) => {
+    res.render("sessions/signout")
+});
 
-sessionsRouter.get("/online", online)
+sessionsRouter.get("/online", (req, res) => {
+    res.render("sessions/online")
+});
 
 sessionsRouter.post("/register",
     validateRequiredFields,
-    checkUserExists,
-    createHash,
+    // checkUserExists,
+    passport.authenticate("register", { session: false }),
+    // createHash,
     async(req, res, next) => {
     
     try {
-        const data = req.body;
-        const response = await create(data);
+        const user = req.user;
         const message = "USER REGISTERED"
-        return res.status(201).json({ message, response });
+        return res.status(201).json({ message, response, user_id: user._id });
     } catch (error) {
         return next(error);
     }
@@ -40,14 +45,16 @@ sessionsRouter.post("/register",
 sessionsRouter.post("/login",
     validateRequiredFields, 
     checkUserExists,
-    verifyHash,
+    // verifyHash,
+    passport.authenticate("login", { session: false }),
     isValidUser, 
     (req, res, next) => {
     try {
+        const user = req.user
         req.session.online = true;
         req.session.email = req.body.email;
         const message = "USER LOGGED IN";
-        return res.status(200).json({ message });
+        return res.status(200).json({ message, user_id: user._id });
     } catch (error) {
         return next(error);
     }
@@ -65,12 +72,13 @@ sessionsRouter.post("/signout", async(req, res, next) => {
 
 sessionsRouter.post("/online", async(req, res, next) => {
     try {
-        const sessions = req.session;
-        console.log(sessions);
-        if (sessions.online) {
-            return res.status(200).json({ message: "USER IS ONLINE", sessions });
+        const {user_id} = req.session;
+        console.log(user_id);
+        const one = await readById(user_id)
+        if (req.session.user_id) {
+            return res.status(200).json({ message: "USER IS ONLINE", user_id });
         }
-        return res.status(400).json({ message: "USER IS NOT ONLINE", sessions })
+        return res.status(400).json({ message: "USER IS NOT ONLINE", user_id })
 
     } catch (error) {
         return next(error);
