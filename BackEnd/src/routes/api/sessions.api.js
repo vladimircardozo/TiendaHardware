@@ -28,7 +28,7 @@ sessionsRouter.get("/online", (req, res) => {
 
 sessionsRouter.post("/register",
     validateRequiredFields,
-    // checkUserExists,
+    checkUserExists,
     passport.authenticate("register", { session: false }),
     // createHash,
     async(req, res, next) => {
@@ -47,7 +47,7 @@ sessionsRouter.post("/login",
     checkUserExists,
     // verifyHash,
     passport.authenticate("login", { session: false }),
-    isValidUser, 
+    // isValidUser, 
     (req, res, next) => {
     try {
         const user = req.user
