@@ -29,10 +29,21 @@ sessionsRouter.get("/online", (req, res) => {
 sessionsRouter.post("/register",
     validateRequiredFields,
     checkUserExists,
-    passport.authenticate("register", { session: false }),
     // createHash,
     async(req, res, next) => {
-    
+        passport.authenticate("register", { session: false }, (err, user, info) => {
+            if (err) {
+                return res.status(err.statusCode || 500).json({ message: err.message });
+            }
+            if (!user) {
+                return res.status(400).json({ error: "USER REGISTRATION FAILED" });
+            }
+
+            req.user = user;
+            next();
+        })(req, res, next);
+    },
+    async (req, res, next) => {
     try {
         const user = req.user;
         const message = "USER REGISTERED"
@@ -40,7 +51,7 @@ sessionsRouter.post("/register",
     } catch (error) {
         return next(error);
     }
-})
+});
 
 sessionsRouter.post("/login",
     validateRequiredFields, 

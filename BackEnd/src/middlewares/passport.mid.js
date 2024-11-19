@@ -8,18 +8,23 @@ passport.use("register", new LocalStrategy(
     async (req, email, password, done) => {
         try {
             if (!email || !password) {
-
-            }
-            const one = await readByEmail(email);
-            if (one) {
-                const error = new Error("Email already exists");
+                const error = new Error("Email and password are required");
                 error.statusCode = 400;
                 return done(error);
+
             }
-            req.body.password = createHashUtil(password);
-            const data = req.body;
-            const user = await create(data);
-            return done(null, user);
+            const existingUser = await readByEmail(email);
+            if (existingUser) {
+                const error = new Error("Email already exists");
+                error.statusCode = 409;
+                return done(error);
+            }
+            const hashedPassword = createHashUtil(password);
+            const userData = {...req.body, password: hashedPassword};
+
+            const newUser = await create(userData);
+            return done(null, newUser);
+            
         } catch (error){
             return done(error);
         }
