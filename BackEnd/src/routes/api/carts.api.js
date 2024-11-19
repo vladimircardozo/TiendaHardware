@@ -67,7 +67,7 @@ router.put("/:cid", async (req, res, next) => {
 
 router.put('/:cid/products/:pid', async (req, res, next) => {
     try {
-        const updatedCart = await cartsManager.updateProductQuantity(req.params.cid, req.params.pid, req.body.quantity);
+        const updatedCart = await cartsManager.updateProductQuantify(req.params.cid, req.params.pid, req.body.quantity);
         if (updatedCart) {
             res.status(200).json(updatedCart);
         } else {

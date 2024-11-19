@@ -45,7 +45,11 @@ CookiesRouter.delete("/destroy/:cookieAborrar", (req, res, next) => {
 CookiesRouter.post("/signed", (req, res, next) => {
     try {
         const message = "COOKIE FIRMADA CREADA";
-        return res.status(201).cookie("nombre","igna",{ signed: true }).json({ message });
+        const userName = req.body.userName || "default";
+        return res
+        .status(201)
+        .cookie("nombre", userName,{ signed: true })
+        .json({ message });
     } catch (error) {
         return next(error);
     }
