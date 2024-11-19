@@ -1,4 +1,4 @@
-const productDetail = async (req, res, next) => {
+const showProductDetail = async (req, res, next) => {
     try {
         res.render("productDetail");
     } catch (error) {
@@ -6,4 +6,4 @@ const productDetail = async (req, res, next) => {
     }
 }
 
-export { productDetail };
+export { showProductDetail };
