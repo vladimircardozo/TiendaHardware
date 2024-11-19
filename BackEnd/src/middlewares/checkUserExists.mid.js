@@ -6,12 +6,12 @@ async function checkUserExists(req, res, next) {
     try {
         const user = await readByEmail({ email });
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+        if (user) {
+            return res.status(409).json({ message: "User already exists" });
         }
 
-        req.user = user; // sea agrega a req para que los siguientes middlewares
-        return next();
+        req.user = user;
+        return next(); // Continúa si no hay usuario
     } catch (error) {
         return next(error);
     }

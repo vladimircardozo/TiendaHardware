@@ -2,6 +2,7 @@ import "dotenv/config.js"
 import express from 'express';
 import morgan from "morgan";
 import cookieParser from "cookie-parser"
+import MongoStore from "connect-mongo";
 import { create } from 'express-handlebars';
 import { Server as socketIOserver } from 'socket.io';
 import http from 'http';
@@ -17,6 +18,7 @@ import session from "express-session";
 
 //server
 const port = process.env.PORT
+
 const app = express();
 const server = http.createServer(app); // Crea un servidor HTTP
 const io = new socketIOserver(server); // Inicializa Socket.IO con el servidor
@@ -30,8 +32,11 @@ app.use(session({
     secret: process.env.SECRET_KEY,
     resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 },
-}))
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        ttl: 60 * 60 * 24, // Tiempo de vida de las sesiones (24 horas)
+    })
+}));
 
 //routers 
 app.use("/api/sessions", sessionsRouter);
