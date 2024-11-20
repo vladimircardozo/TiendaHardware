@@ -4,6 +4,15 @@ import passport from "../../middlewares/passport.mid.js";
 
 const sessionsRouter = Router();
 
+sessionsRouter.post("/register", passport.authenticate("register", {session: false} ), register);
+sessionsRouter.post("/login", passport.authenticate("login", {session: false}), login);
+sessionsRouter.post("/signaut", signout);
+sessionsRouter.post("/online", /*falta token */);
+// /api/sessions/google va a llamar a la pantalla de consentimiento y se encarga de autenticar en google
+sessionsRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+// /api/sessions/google/cb va a llamar efectivamente a la estrategia encargada de register/login con google
+sessionsRouter.get("/google/cb", passport.authenticate("google", { session: false }), google);
+
 export default sessionsRouter; 
 
 async function register(req, res, next) {
@@ -17,7 +26,7 @@ async function register(req, res, next) {
 
 async function login(req, res, next) {
     try {
-        return res.status(200).json({ message: "USER LOGGED IN", user_id: req.user._id });
+        return res.status(200).json({ message: "USER LOGGED IN", user_id: req.user._id /*falta token */});
     } catch (error) {
         next(error);
     }
@@ -45,3 +54,14 @@ async function online(req, res, next) {
         next(error);
     }
 };
+
+function google(req, res, next) {
+    try {
+        return res.status(200).json({ message: "USER LOGGED IN", /*falta token */ });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+/*falta token */
