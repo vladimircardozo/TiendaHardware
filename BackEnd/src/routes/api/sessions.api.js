@@ -5,6 +5,15 @@ import { verifyTokenUtil } from '../../utils/token.util.js';
 
 const sessionsRouter = Router();
 
+// Rutas para renderizar
+sessionsRouter.get('/register', (req, res) => {
+  res.render('sessions/register');
+});
+
+sessionsRouter.get('/login', (req, res) => {
+  res.render('sessions/login');
+});
+
 sessionsRouter.post(
   '/register',
   passport.authenticate('register', { session: false }),
