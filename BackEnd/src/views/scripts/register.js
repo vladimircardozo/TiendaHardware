@@ -1,23 +1,24 @@
-const selector = document.querySelector("#register");
+const selector = document.querySelector('#register');
 
-selector.addEventListener("click", async (event) => {
-    try {
+selector.addEventListener('click', async (event) => {
+  try {
     event.preventDefault();
     const data = {
-        name : document.querySelector("#name").value,
-        email: document.querySelector("#email").value,
-        password: document.querySelector("#password").value
-    }
-
-    const options = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      name: document.querySelector('#name').value,
+      email: document.querySelector('#email').value,
+      password: document.querySelector('#password').value,
     };
 
-    let response = await fetch("/api/sessions/register", options);
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    };
+
+    let response = await fetch('/api/sessions/register', options);
     response = await response.json();
-    } catch (error) {
-        console.error(error.message);
-    }
+    alert(response.message);
+  } catch (error) {
+    alert(error.message);
+  }
 });
