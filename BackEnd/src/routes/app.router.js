@@ -12,6 +12,6 @@ appRouter.use("/api", apiRouter);
 // Vistas
 appRouter.get("/products", showProducts);
 appRouter.get("/realtimeproducts", showRealTimeProducts);
-appRouter.get("/productsdetail", showProductDetail);
+appRouter.get("/product/:id", showProductDetail);
 
 export default appRouter
