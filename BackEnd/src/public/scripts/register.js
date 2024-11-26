@@ -16,8 +16,15 @@ selector.addEventListener('click', async (event) => {
     };
 
     let response = await fetch('/api/sessions/register', options);
+    console.log("Response:", response)
     response = await response.json();
-    alert(response.message);
+    console.log("Response:", response);
+    if (response.status === 201) {
+      alert ('User created successfully');
+      window.location.href = './login';
+    } else {
+      alert ('Error creating user');
+    } 
   } catch (error) {
     alert(error.message);
   }

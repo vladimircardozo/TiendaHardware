@@ -54,7 +54,7 @@ const hbs = create({
 });
 app.engine('.handlebars', hbs.engine);
 app.set('view engine', '.handlebars');
-app.set('views', path.join(process.cwd(), 'src/views'));
+app.set('views', path.join(process.cwd(), 'src/public'));
 
 
 // Servir archivos estáticos desde la carpeta "public"
