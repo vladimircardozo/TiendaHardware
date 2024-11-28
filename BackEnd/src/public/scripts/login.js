@@ -17,7 +17,7 @@
 //     let response = await fetch('/api/sessions/login', options);
 //     response = await response.json();
 //     if (response.message === "USER LOGGED IN") {
-//       location.replace("/")
+//       location.replace("/products")
 //   } else {
 //       alert("INVALID CREDENTIALS")
 //   }
