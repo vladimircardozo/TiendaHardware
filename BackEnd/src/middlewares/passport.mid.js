@@ -67,21 +67,33 @@ passport.use(
   )
 );
 
-passport.use("google", new GoogleStrategy(
-    { clientID: GOOGLE_CLIENT_ID, clientSecret: GOOGLE_CLIENT_SECRET, passReqToCallback: true, callbackURL: BASE_URL+"sessions/google/cb" },
+passport.use(
+  'google',
+  new GoogleStrategy(
+    {
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      passReqToCallback: true,
+      callbackURL: BASE_URL + 'sessions/google/cb',
+    },
     async (req, accessToken, refreshToken, profile, done) => {
-        try {
-            const { id, picture } = profile;
-            let user = await readByEmail(id);
-            if (!user) {
-                user = await create({ email: id, photo: picture, password: createHashUtil(id) });
-            }
-            req.token = createTokenUtil({ role: user.role, user_id: user._id });
-            return done(null, user);
-        } catch (error) {
-            return done(error);
+      try {
+        const { id, picture } = profile;
+        let user = await readByEmail(id);
+        if (!user) {
+          user = await create({
+            email: id,
+            photo: picture,
+            password: createHashUtil(id),
+          });
         }
+        req.token = createTokenUtil({ role: user.role, user_id: user._id });
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
     }
-))
+  )
+);
 
 export default passport;
