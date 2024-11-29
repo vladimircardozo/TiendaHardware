@@ -12,8 +12,13 @@ function createTokenUtil(data) {
 
 
 function verifyTokenUtil(token) {
+    try {
     const verifyData = jwt.verify(token, SECRET_KEY);
     return verifyData;
+    } catch (err) {
+        throw new Error("Token is invalid");
+        
+    }
 }
 
 export { createTokenUtil, verifyTokenUtil };
