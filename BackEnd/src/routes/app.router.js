@@ -1,19 +1,27 @@
-import { Router } from "express";
+import CustomRouter from "../utils/CustomRouter.util.js";
 import apiRouter from "./api/app.api.js";
 import { showProducts } from "./views/products.view.js";
 import { showRealTimeProducts } from "./views/realTimeProducts.view.js";
 import { showProductDetail } from "./views/productDetail.view.js";
 import { showCartDetail } from "./views/cartDetail.view.js";
 
-const appRouter = Router();
-
-// API routes
-appRouter.use("/api", apiRouter);
+class AppRouter extends CustomRouter {
+    constructor() {
+        super();
+        this.init();
+    }
+    init() {
+        // API routes
+this.use("/api", apiRouter);
 
 // Vistas
-appRouter.get("/products", showProducts);
-appRouter.get("/realtimeproducts", showRealTimeProducts);
-appRouter.get("/product/:id", showProductDetail);
-appRouter.get("/carts/:cartId", showCartDetail)
+this.read("/products", showProducts);
+this.read("/realtimeproducts", showRealTimeProducts);
+this.read("/product/:id", showProductDetail);
+this.read("/carts/:cartId", showCartDetail)
+    }
+}
 
-export default appRouter
+let appRouter = new AppRouter();
+appRouter = appRouter.getRouter();
+export default appRouter;

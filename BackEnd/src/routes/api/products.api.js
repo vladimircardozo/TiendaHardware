@@ -1,11 +1,15 @@
-import { Router } from "express";
+import CustomRouter from "../../utils/CustomRouter.util.js";
 import { read, create, update, destroy, readById } from "../../data/mongo/managers/products.manager.js";
 import { ObjectId } from "mongodb";
 
-const ProductsApiRouter = Router();
+class ProductsApiRouter extends CustomRouter {
+    constructor() {
+        super();
+        this.init();
+    }
 
-ProductsApiRouter.post("/", async (req, res, next) => {
-    try {
+    init() {
+this.create("/", async (req, res) => {
         const {title, price, stock, description, category, code } = req.body;
         if (!title || !price || !stock || !description || !category || !code) {
             return res.status(400).json({ message: "Todos los campos son obligatorios." });
@@ -20,26 +24,18 @@ ProductsApiRouter.post("/", async (req, res, next) => {
         const message = "PRODUCT CREATED"
         const response = await create(data);
         return res.status(201).json({ response, message })
-    } catch (error) {
-        return next(error);
-    }
 });
 
-ProductsApiRouter.get("/", async (req, res, next) => {
-    try {
+this.read("/", async (req, res) => {
         const { limit = 10, page = 1, sort, query, availibility} = req.query;
         const message = "PRODUCTS FOUND";
         const response = await read({ limit, page, sort, query, availibility })
         return res.status(200).json(response, message);
-    } catch (error) {
-        return next(error);
-    }
 });
 
-ProductsApiRouter.get("/:id", async (req, res, next) => {
-    try {
-        const { id } = req.params;
+this.read("/:id", async (req, res) => {
 
+        const { id } = req.params;
         // Validar el formato del ID
         if (!ObjectId.isValid(id)) {
             return res.status(400).json({ message: "ID inválido" });
@@ -50,13 +46,9 @@ ProductsApiRouter.get("/:id", async (req, res, next) => {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
         return res.status(200).json(response);
-    } catch (error) {
-        return next(error);
-    }
 });
 
-ProductsApiRouter.put("/:id", async (req, res, next) => {
-    try {
+this.update("/:id", async (req, res) => {
         const { id } = req.params;
         const data = req.body;
 
@@ -70,13 +62,9 @@ ProductsApiRouter.put("/:id", async (req, res, next) => {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
         return res.status(200).json({ response, message: "PRODUCT UPDATED" });
-    } catch (error) {
-        return next(error);
-    }
 });
 
-ProductsApiRouter.delete("/:id", async (req, res, next) => {
-    try {
+this.destroy("/:id", async (req, res) => {
         const { id } = req.params;
 
         // Validar el formato del ID
@@ -89,9 +77,8 @@ ProductsApiRouter.delete("/:id", async (req, res, next) => {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
         return res.status(200).json({ response, message: "PRODUCT DELETED" });
-    } catch (error) {
-        return next(error);
-    }
 });
+    }
+}
 
-export default ProductsApiRouter
+export default new ProductsApiRouter().getRouter();

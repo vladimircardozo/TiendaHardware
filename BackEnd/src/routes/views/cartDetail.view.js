@@ -1,7 +1,9 @@
+import cartsManager from "../../data/mongo/managers/carts.manager.js"
+
 const showCartDetail = async (req, res, next) => {
     try {
-        const cartId = req.params.cartId; 
-        const cart = await getCartById(cartId);
+        const cartId = req.params.cartId;
+        const cart = await cartsManager.getCartById(cartId);
 
         if (!cart) {
             return res.status(404).send("Carrito no encontrado");

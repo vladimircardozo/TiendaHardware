@@ -59,7 +59,7 @@ class CartManager {
         return await Cart.findByIdAndUpdate(cid, {products}, { new: true });
     }
 
-    async updateProductQuantify(cid, pid, quantity) {
+    async updateProductQuantity(cid, pid, quantity) {
         return await Cart.findByIdAndUpdate(
             {_id: cid, "products.productId": pid},
             {$set: { "products.$.quantity": quantity }},
