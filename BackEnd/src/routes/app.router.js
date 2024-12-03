@@ -17,7 +17,7 @@ this.use("/api", apiRouter);
 // Vistas
 this.read("/products",["PUBLIC"], showProducts);
 this.read("/realtimeproducts",["ADMIN"], showRealTimeProducts);
-this.read("/product/:id",['USER', 'ADMIN'], showProductDetail);
+this.read("/product/:id",["PUBLIC"], showProductDetail);
 this.read("/carts/:cartId",['USER', 'ADMIN'], showCartDetail)
     }
 }
