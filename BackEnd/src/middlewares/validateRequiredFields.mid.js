@@ -5,7 +5,7 @@ function validateRequiredFields (req, res, next) {
         return res.status(400).json({error: 'Email and password are required.'});
     }
 
-    next();
+    return next();
 }
 
 export default validateRequiredFields;
