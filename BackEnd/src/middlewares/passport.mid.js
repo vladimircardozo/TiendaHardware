@@ -1,7 +1,8 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
-import { create, readByEmail } from '../data/mongo/managers/users.manager.js';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { create, readByEmail, readById, update } from '../data/mongo/managers/users.manager.js';
 import { createHashUtil, verifyHashUtil } from '../utils/hash.util.js';
 import { createTokenUtil } from '../utils/token.util.js';
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL } = process.env;
@@ -35,6 +36,7 @@ passport.use(
     }
   )
 );
+
 passport.use(
   'login',
   new LocalStrategy(
@@ -60,6 +62,72 @@ passport.use(
         // los datos de la session se deben guardar en un token
         req.token = createTokenUtil({ role: user.role, user_id: user._id });
         return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+
+passport.use(
+  'admin',
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
+      secretOrKey: process.env.SECRET_KEY,
+    },
+    async (data, done) => {
+      try {
+        const { user_id, role } = data;
+        if (role !== 'ADMIN') {
+          const info = { message: 'NOT AUTHORIZE', statusCode: 403 };
+          return done(info, false, info);
+        }
+        const user = await readById(user_id);
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+
+passport.use(
+  'online',
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
+      secretOrKey: process.env.SECRET_KEY,
+    },
+    async (data, done) => {
+      try {
+        const { user_id } = data;
+        const user = await readById(user_id);
+        const { isOnline } = user;
+        if (!isOnline) {
+          const info = { message: 'USER IS NOT OFFLINE', statusCode: 401 };
+          return done(info, false, info);
+        }
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    }
+  )
+);
+
+passport.use(
+  'signout',
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
+      secretOrKey: process.env.SECRET_KEY,
+    },
+    async (payload, done) => {
+      try {
+        const { user_id } = data;
+        await update(user_id, { isOnline: false });
+        return done(null, { user_id: null });
       } catch (error) {
         return done(error);
       }
