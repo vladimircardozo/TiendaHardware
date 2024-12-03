@@ -1,6 +1,9 @@
 import CustomRouter from "../../utils/CustomRouter.util.js";
 import { read, create, update, destroy, readById } from "../../data/mongo/managers/products.manager.js";
 import { ObjectId } from "mongodb";
+import passportCb from "../../middlewares/passportCb.mid.js";
+import verifyToken from "../../middlewares/verifyToken.mid.js";
+import isAdmin from "../../middlewares/isAdmin.mid.js";
 
 class ProductsApiRouter extends CustomRouter {
     constructor() {
@@ -9,7 +12,7 @@ class ProductsApiRouter extends CustomRouter {
     }
 
     init() {
-this.create("/", async (req, res) => {
+this.create("/", ["ADMIN"], verifyToken, isAdmin, async (req, res) => {
         const {title, price, stock, description, category, code } = req.body;
         if (!title || !price || !stock || !description || !category || !code) {
             return res.status(400).json({ message: "Todos los campos son obligatorios." });
@@ -23,60 +26,60 @@ this.create("/", async (req, res) => {
         const data = { title, price, stock, description, category, code };
         const message = "PRODUCT CREATED"
         const response = await create(data);
-        return res.status(201).json({ response, message })
+        return res.json201(response, message);
 });
 
-this.read("/", async (req, res) => {
+this.read("/", ["PUBLIC"], async (req, res) => {
         const { limit = 10, page = 1, sort, query, availibility} = req.query;
         const message = "PRODUCTS FOUND";
         const response = await read({ limit, page, sort, query, availibility })
-        return res.status(200).json(response, message);
+        return res.json200(response, message);
 });
 
-this.read("/:id", async (req, res) => {
+this.read("/:id", ["PUBLIC"], async (req, res) => {
 
         const { id } = req.params;
         // Validar el formato del ID
         if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "ID inválido" });
+            return res.json404();
         }
 
         const response = await readById(id);
         if (!response) {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
-        return res.status(200).json(response);
+        return res.json200(response, message);
 });
 
-this.update("/:id", async (req, res) => {
+this.update("/:id", ["ADMIN"], passportCb("admin"), async (req, res) => {
         const { id } = req.params;
         const data = req.body;
 
         // Validar el formato del ID
         if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "ID inválido" });
+            return res.json404();
         }
 
         const response = await update(id, data);
         if (!response) {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
-        return res.status(200).json({ response, message: "PRODUCT UPDATED" });
+        return res.json200(response, message);
 });
 
-this.destroy("/:id", async (req, res) => {
+this.destroy("/:id", ["ADMIN"], passportCb("admin"), async (req, res) => {
         const { id } = req.params;
 
         // Validar el formato del ID
         if (!ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "ID inválido" });
+            return res.json404();
         }
 
         const response = await destroy(id);
         if (!response) {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
-        return res.status(200).json({ response, message: "PRODUCT DELETED" });
+        return res.json200(response, message);
 });
     }
 }

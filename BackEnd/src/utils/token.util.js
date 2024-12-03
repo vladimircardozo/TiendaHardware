@@ -10,15 +10,18 @@ function createTokenUtil(data) {
     return token;
 }
 
-
-function verifyTokenUtil(token) {
-    try {
-    const verifyData = jwt.verify(token, SECRET_KEY);
-    return verifyData;
-    } catch (err) {
-        throw new Error("Token is invalid");
-        
-    }
+function finishTokenUtil(data) {
+    const token = jwt.sign(
+        data,
+        SECRET_KEY,
+        { expiresIn: 1 }     
+    )
+    return token
 }
 
-export { createTokenUtil, verifyTokenUtil };
+function verifyTokenUtil(token) {
+    const verifyData = jwt.verify(token, SECRET_KEY);
+    return verifyData;
+}
+
+export { createTokenUtil, verifyTokenUtil, finishTokenUtil };

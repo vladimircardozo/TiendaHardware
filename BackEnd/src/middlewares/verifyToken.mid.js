@@ -1,4 +1,4 @@
-import { verifyTokenUtil } from "../utils/token.util";
+import { verifyTokenUtil } from "../utils/token.util.js";
 
 async function verifyToken(req, res, next) {
     const token = req?.cookies?.token;
