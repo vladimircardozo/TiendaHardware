@@ -1,7 +1,6 @@
 import CustomRouter from '../../utils/CustomRouter.util.js';
 import { readById } from '../../data/mongo/managers/users.manager.js';
-import passportCb from '../../middlewares/passportCb.mid.js';
-// import { verifyTokenUtil } from '../../utils/token.util.js';
+import verifyToken from '../../middlewares/verifyToken.mid.js';
 
 class SessionsApiRouter extends CustomRouter {
   constructor() {
@@ -19,24 +18,27 @@ class SessionsApiRouter extends CustomRouter {
       res.render('sessions/login');
     });
 
-    this.create('/register',passportCb('register'), register);
-    this.create('/login', passportCb('login'), login);
-    this.create('/signout', ['USER', 'ADMIN'], passportCb('signout'), signout);
-    this.create('/online', ['USER', 'ADMIN'], passportCb('online'), onlineToken);
-    this.read('/google', ['PUBLIC'], passportCb('google', { scope: ['email', 'profile'] }));
-    this.read('/google/cb', ['PUBLIC'], passportCb('google'), google);
+    // Rutas de creación de usuario y login
+    this.create('/register', register);
+    this.create('/login', login);
+
+    // Rutas que requieren autenticación con JWT
+    this.create('/signout', ['USER', 'ADMIN'], verifyToken, signout);
+    this.create('/online', ['USER', 'ADMIN'], verifyToken, onlineToken);
+
+    // Eliminar las rutas relacionadas con Google OAuth usando Passport
+    // Si quieres manejar la autenticación de Google por otro medio, puedes hacerlo aquí
+    // por ejemplo, usando la librería google-auth-library o alguna implementación personalizada.
   }
 }
 
 const sessionsRouter = new SessionsApiRouter();
 export default sessionsRouter.getRouter();
 
+// Funciones de registro, login, signout y verificación de usuario
 async function register(req, res) {
   const { _id } = req.user;
   const message = 'User Registered!';
-  // return res
-  //   .status(201)
-  //   .json({ message: 'USER REGISTERED', user_id: user._id });
   return res.json201(_id, message);
 }
 
@@ -46,9 +48,6 @@ async function login(req, res) {
   const message = 'User logged in!';
   const response = 'OK';
   return res.cookie('token', token, opts).json200(response, message);
-  // return res
-  //   .status(200)
-  //   .json({ message: 'USER LOGGED IN', token: req.token });
 }
 
 async function signout(req, res) {
@@ -68,10 +67,6 @@ async function online(req, res, next) {
     const message = 'User is not online';
     return res.json400(message);
   }
-}
-
-function google(req, res) {
-  return res.redirect('/products');
 }
 
 async function onlineToken(req, res, next) {
