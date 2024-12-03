@@ -143,6 +143,7 @@ passport.use(
       clientSecret: GOOGLE_CLIENT_SECRET,
       passReqToCallback: true,
       callbackURL: BASE_URL + 'sessions/google/cb',
+      scope: ['email', 'profile'],
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
