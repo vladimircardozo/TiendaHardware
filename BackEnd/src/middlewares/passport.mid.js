@@ -49,6 +49,7 @@ passport.use(
           error.statusCode = 401;
           return done(error);
         }
+
         const dbPassword = user.password;
         const verify = verifyHashUtil(password, dbPassword);
         if (!verify) {
@@ -56,19 +57,18 @@ passport.use(
           error.statusCode = 401;
           return done(error);
         }
-        // y luego inicia sesión "automaticamente"
-        // req.session.role = user.role
-        // req.session.user_id = user._id
-        // los datos de la session se deben guardar en un token
-        req.token = createTokenUtil({ role: user.role, user_id: user._id });
-        return done(null, user);
+
+        // Generar el token JWT
+        const token = createTokenUtil({ role: user.role, user_id: user._id });
+        req.token = token; // Almacena el token en req.token
+
+        return done(null, user); // Devuelve el usuario para continuar con la respuesta
       } catch (error) {
         return done(error);
       }
     }
   )
 );
-
 passport.use(
   'admin',
   new JwtStrategy(
@@ -125,7 +125,7 @@ passport.use(
     },
     async (payload, done) => {
       try {
-        const { user_id } = data;
+        const { user_id } = payload;
         await update(user_id, { isOnline: false });
         return done(null, { user_id: null });
       } catch (error) {
