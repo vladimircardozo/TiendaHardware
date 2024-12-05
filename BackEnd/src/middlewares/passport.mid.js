@@ -13,17 +13,12 @@ passport.use(
     { passReqToCallback: true, usernameField: 'email' },
     async (req, email, password, done) => {
       try {
-        // la gracia de definir una estrategia de passport
-        // es simplificar TOOODOS los middlewares e incluso register
         if (!email || !password) {
-          // no hace falta definirlo porque passport responde por defecto
         }
         const one = await readByEmail(email);
         if (one) {
           const error = new Error('User already exists');
           error.statusCode = 400;
-          // throw error
-          // no se arroja el error porque en cambio se usa DONE
           return done(error);
         }
         req.body.password = createHashUtil(password);
