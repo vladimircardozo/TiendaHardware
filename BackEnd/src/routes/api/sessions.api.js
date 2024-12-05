@@ -1,7 +1,7 @@
 import CustomRouter from '../../utils/CustomRouter.util.js';
 import { readById } from '../../data/mongo/managers/users.manager.js';
 import passportCb from '../../middlewares/passportCb.mid.js';
-// import { verifyTokenUtil } from '../../utils/token.util.js';
+import { verifyTokenUtil } from '../../utils/token.util.js';
 
 class SessionsApiRouter extends CustomRouter {
   constructor() {
@@ -48,12 +48,17 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
-  return res.status(200).json({ message: 'USER LOGGED IN', token: req.token });
+  const { token } = req.user;
+  const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true };
+  const message = "User logged in!";
+  const response = "OK";
+  return res.cookie("token", token, opts).json200(response, message);
 }
 
 async function signout(req, res) {
-  req.session.destroy();
-  return res.status(200).json({ message: 'USER SIGNED OUT' });
+  const message = "User signed out!";
+  const response = "OK";
+  return res.clearCookie("token").json200(response, message);
 }
 
 async function online(req, res, next) {
