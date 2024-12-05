@@ -12,12 +12,12 @@ class AppRouter extends CustomRouter {
     }
     init() {
         // API routes
-this.use("/api", apiRouter);
+this.use("/api", ["PUBLIC"], apiRouter);
 
 // Vistas
-this.read("/products",["PUBLIC"], showProducts);
-this.read("/realtimeproducts",["ADMIN"], showRealTimeProducts);
-this.read("/product/:id",["PUBLIC"], showProductDetail);
+this.read("/products",['PUBLIC'], showProducts);
+this.read("/realtimeproducts",['ADMIN'], showRealTimeProducts);
+this.read("/product/:id",['PUBLIC'], showProductDetail);
 this.read("/carts/:cartId",['USER', 'ADMIN'], showCartDetail)
     }
 }

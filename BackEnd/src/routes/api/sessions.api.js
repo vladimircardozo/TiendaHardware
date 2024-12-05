@@ -21,9 +21,18 @@ class SessionsApiRouter extends CustomRouter {
 
     this.create('/register', ['PUBLIC'], passportCb('register'), register);
     this.create('/login', ['PUBLIC'], passportCb('login'), login);
-    this.create('/signout', ["USER", "ADMIN"], passportCb('signout'), signout);
-    this.create('/online', ["USER", "ADMIN"], passportCb('online'), onlineToken);
-    this.read('/google', ['PUBLIC'], passportCb('google', { scope: ['email', 'profile'] }));
+    this.create('/signout', ['USER', 'ADMIN'], passportCb('signout'), signout);
+    this.create(
+      '/online',
+      ['USER', 'ADMIN'],
+      passportCb('online'),
+      onlineToken
+    );
+    this.read(
+      '/google',
+      ['PUBLIC'],
+      passportCb('google', { scope: ['email', 'profile'] })
+    );
     this.read('/google/cb', ['PUBLIC'], passportCb('google'), google);
   }
 }
@@ -32,52 +41,48 @@ const sessionsRouter = new SessionsApiRouter();
 export default sessionsRouter.getRouter();
 
 async function register(req, res) {
-    const user = req.user;
-    return res
-      .status(201)
-      .json({ message: 'USER REGISTERED', user_id: user._id });
+  const user = req.user;
+  return res
+    .status(201)
+    .json({ message: 'USER REGISTERED', user_id: user._id });
 }
 
 async function login(req, res) {
-    return res
-      .status(200)
-      .json({ message: 'USER LOGGED IN', token: req.token });
+  return res.status(200).json({ message: 'USER LOGGED IN', token: req.token });
 }
 
 async function signout(req, res) {
-    req.session.destroy();
-    return res.status(200).json({ message: 'USER SIGNED OUT' });
+  req.session.destroy();
+  return res.status(200).json({ message: 'USER SIGNED OUT' });
 }
 
-async function online(req, res) {
-    const { user_id } = req.session;
-    const user = await readById(user_id);
-    if (req.session.user_id) {
-      return res
-        .status(200)
-        .json({ message: user.email.toUpperCase() + 'IS ONLINE', online: true });
-    } else {
-      return res
-        .status(400)
-        .json({ message: 'USER IS NOT ONLINE', online: false });
-    }
+async function online(req, res, next) {
+  const { user_id } = req.session;
+  const one = await readById(user_id);
+  if (req.session.user_id) {
+    const message = one.email + " is online";
+    const response = true;
+    return res.json200(response, message);
+  } else {
+    const message = "User is not online";
+    return res.json400(message);
+  }
 }
-
 function google(req, res) {
-  return res.redirect('/products'); // Cambia '/dashboard' por la ruta deseada
+  return res.redirect('/products');
 }
 
 async function onlineToken(req, res) {
-    const { token } = req.headers;
-    const data = verifyTokenUtil(token);
-    const user = await readById(data.user_id);
-    if (user) {
-      return res
-        .status(200)
-        .json({ message: user.email.toUpperCase() + 'IS ONLINE', online: true });
-    } else {
-      return res
-        .status(400)
-        .json({ message: 'USER IS NOT ONLINE', online: false });
-    }
+  const { token } = req.headers;
+  const data = verifyTokenUtil(token);
+  const user = await readById(data.user_id);
+  if (user) {
+    return res
+      .status(200)
+      .json({ message: user.email.toUpperCase() + 'IS ONLINE', online: true });
+  } else {
+    return res
+      .status(400)
+      .json({ message: 'USER IS NOT ONLINE', online: false });
+  }
 }

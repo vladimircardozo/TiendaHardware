@@ -70,7 +70,7 @@ passport.use(
   )
 );
 passport.use(
-  'admin',
+  "admin",
   new JwtStrategy(
     {
       jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
@@ -79,15 +79,13 @@ passport.use(
     async (data, done) => {
       try {
         const { user_id, role } = data;
-        if (role !== 'ADMIN') {
-          const info = { message: 'NOT AUTHORIZE', statusCode: 403 };
-          return done(info, false, info);
+        if (role !== "ADMIN") {
+          const info = { message: "NOT AUTHORIZE", statusCode: 403 };
+          return done(null, false, info);
         }
         const user = await readById(user_id);
         return done(null, user);
-      } catch (error) {
-        return done(error);
-      }
+      } catch (error) {}
     }
   )
 );
@@ -106,7 +104,7 @@ passport.use(
         const { isOnline } = user;
         if (!isOnline) {
           const info = { message: 'USER IS NOT OFFLINE', statusCode: 401 };
-          return done(info, false, info);
+          return done(null, false, info);
         }
         return done(null, user);
       } catch (error) {
