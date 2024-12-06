@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import jwt from 'jsonwebtoken';
+import { readById } from '../data/mongo/managers/users.manager.js'
 
 class CustomRouter {
   constructor() {

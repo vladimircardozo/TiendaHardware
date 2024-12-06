@@ -39,6 +39,8 @@ passport.use(
     async (req, email, password, done) => {
       try {
         const user = await readByEmail(email);
+        console.log('Email recibido:', email);
+        console.log('Usuario encontrado:', user);
         if (!user) {
           const error = new Error('INVALID CREDENTIALS');
           error.statusCode = 401;
