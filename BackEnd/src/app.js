@@ -54,11 +54,11 @@ const hbs = create({
 });
 app.engine('.handlebars', hbs.engine);
 app.set('view engine', '.handlebars');
-app.set('views', path.join(process.cwd(), 'src/public'));
+app.set('views', path.join(process.cwd(), 'src/view'));
 
 
 // Servir archivos estáticos desde la carpeta "public"
-app.use(express.static(path.join(process.cwd(), 'public')));
+app.use(express.static(path.join(process.cwd(), 'view')));
 
 // Ruta para mostrar productos en la vista Handlebars
 app.get('/products', async (req, res) => {
