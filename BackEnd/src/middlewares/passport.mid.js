@@ -5,7 +5,8 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { create, readByEmail, readById, update } from '../data/mongo/managers/users.manager.js';
 import { createHashUtil, verifyHashUtil } from '../utils/hash.util.js';
 import { createTokenUtil } from '../utils/token.util.js';
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL } = process.env;
+import envUtil from '../utils/env.util.js';
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL } = envUtil;
 
 passport.use(
   'register',

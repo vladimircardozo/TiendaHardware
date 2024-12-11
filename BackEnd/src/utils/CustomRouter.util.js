@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
-import { readById } from '../data/mongo/managers/users.manager.js'
+import { readById } from '../data/mongo/managers/users.manager.js';
+import argsUtil from './args.util.js';
 
 class CustomRouter {
   constructor() {
@@ -31,7 +32,7 @@ class CustomRouter {
       if (policies.includes('PUBLIC')) return next();
       const token = req?.cookies?.token;
       if (!token) return res.json401();
-      const data = jwt.verify(token, process.env.SECRET);
+      const data = jwt.verify(token, argsUtil.SECRET);
       const { role, user_id } = data;
       if (!role || !user_id) return res.json401();
       if (

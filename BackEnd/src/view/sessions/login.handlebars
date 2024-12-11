@@ -38,11 +38,12 @@
         const selector = document.querySelector('#login');
 
 selector.addEventListener('click', async (event) => {
+  event.preventDefault(); // Prevenir el comportamiento predeterminado del botón
+
   try {
-    event.preventDefault();
     const data = {
-      email: document.querySelector('#email').value,
-      password: document.querySelector('#password').value,
+      email: document.querySelector('#email').value.trim(),
+      password: document.querySelector('#password').value.trim(),
     };
 
     const options = {
@@ -51,17 +52,30 @@ selector.addEventListener('click', async (event) => {
       body: JSON.stringify(data),
     };
 
-    let response = await fetch('/api/sessions/login', options);
-    response = await response.json();
-    if (response.message === "USER LOGGED IN") {
-      location.replace("/products")
-  } else {
-      alert("INVALID CREDENTIALS")
-  }
+    // Realizar la solicitud
+    const response = await fetch('/api/sessions/login', options);
+
+    // Verificar si la respuesta es exitosa
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error desconocido');
+    }
+
+    const result = await response.json();
+
+    // Comprobar el mensaje en la respuesta (normalizado a minúsculas)
+    if (result.message.toLowerCase() === 'user logged in') {
+      location.replace('/products'); // Redirigir a /products si el login es exitoso
+    } else {
+      alert('Credenciales inválidas. Verifica tu email y contraseña.');
+    }
   } catch (error) {
-    alert(error.message);
+    // Manejo de errores
+    console.error('Error durante el inicio de sesión:', error.message);
+    alert(error.message); // Mostrar el mensaje de error
   }
 });
+
     </script>
 </body>
 </html>

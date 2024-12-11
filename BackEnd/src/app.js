@@ -1,4 +1,4 @@
-import "dotenv/config.js"
+import envUtil from './utils/env.util.js';
 import express from 'express';
 import morgan from "morgan";
 import cookieParser from "cookie-parser"
@@ -15,9 +15,10 @@ import sessionsRouter from "./routes/api/sessions.api.js"
 import dbConnect from "./utils/dbconnect.util.js";
 import setupSocket from "./utils/socket.util.js";
 import session from "express-session";
+import argsUtil from "./utils/args.util.js";
 
 //server
-const port = process.env.PORT
+const port = envUtil.PORT;
 
 const app = express();
 const server = http.createServer(app); // Crea un servidor HTTP
@@ -27,13 +28,13 @@ const io = new socketIOserver(server); // Inicializa Socket.IO con el servidor
 app.use(express.json()); //analizar JSON
 app.use(express.urlencoded({ extended: true })); //analizar cuerpos URL-encoded
 app.use(morgan("dev"));
-app.use(cookieParser(process.env.SECRET_KEY));
+app.use(cookieParser(envUtil.SECRET_KEY));
 app.use(session({
-    secret: process.env.SECRET_KEY,
+    secret: envUtil.SECRET_KEY,
     resave: true,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
+        mongoUrl: envUtil.MONGODB_URI,
         ttl: 60 * 60 * 24, // Tiempo de vida de las sesiones (24 horas)
     })
 }));
