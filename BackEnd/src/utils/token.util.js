@@ -8,7 +8,7 @@ function createTokenUtil(data) {
 }
 
 function finishTokenUtil(data) {
-  const token = jwt.sign(data, SECRET_KEY, { expiresIn: 1 });
+  const token = jwt.sign(data, SECRET_KEY, { expiresIn: "1h" });
   return token;
 }
 

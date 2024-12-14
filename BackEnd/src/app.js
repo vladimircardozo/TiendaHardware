@@ -15,7 +15,6 @@ import sessionsRouter from "./routes/api/sessions.api.js"
 import dbConnect from "./utils/dbconnect.util.js";
 import setupSocket from "./utils/socket.util.js";
 import session from "express-session";
-import argsUtil from "./utils/args.util.js";
 
 //server
 const port = envUtil.PORT;
