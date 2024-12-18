@@ -72,7 +72,7 @@ passport.use(
   new JwtStrategy(
     {
       jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
-      secretOrKey: process.env.SECRET_KEY,
+      secretOrKey: envUtil.SECRET_KEY,
     },
     async (data, done) => {
       try {
@@ -93,7 +93,7 @@ passport.use(
   new JwtStrategy(
     {
       jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
-      secretOrKey: process.env.SECRET_KEY,
+      secretOrKey: envUtil.SECRET_KEY,
     },
     async (data, done) => {
       try {
@@ -117,7 +117,7 @@ passport.use(
   new JwtStrategy(
     {
       jwtFromRequest: ExtractJwt.fromExtractors([(req) => req?.cookies?.token]),
-      secretOrKey: process.env.SECRET_KEY,
+      secretOrKey: envUtil.SECRET_KEY,
     },
     async (payload, done) => {
       try {

@@ -10,37 +10,53 @@ async function register(req, res) {
   
   async function login(req, res) {
     try {
-        const { token } = req.user;
-        const opts = { maxAge: 60 * 60 * 24 * 7, httpOnly: true };
-        res.cookie("token", token, opts);
-        return res.json200("success", "user logged in");
-    } catch (error) {
-        console.error("Error en login:", error.message);
-        return res.status(500).json({
-            message: "Internal server error",
-            error: error.message,
-        });
-    }
-}
+      const user = req.user; // Usuario proporcionado por Passport
+      const token = req.token; // Token generado por Passport
   
+      if (!user || !token) {
+        return res.status(400).json({ message: 'Invalid user or token' });
+      }
+  
+      const opts = { maxAge: 60 * 60 * 24 * 7 * 1000, httpOnly: true }; // maxAge en milisegundos
+      res.cookie("token", token, opts); // Configura la cookie con el token
+  
+      return res.status(200).json({ message: 'User logged in' });
+    } catch (error) {
+      console.error("Error en login:", error.message);
+      return res.status(500).json({
+        message: "Internal server error",
+        error: error.message,
+      });
+    }
+  }
+  
+
   async function signout(req, res) {
     const message = "User signed out!";
     const response = "OK";
     return res.clearCookie("token").json200(response, message);
   }
   
-  async function online(req, res, next) {
-    const { user_id } = req.session;
-    const one = await readById(user_id);
-    if (req.session.user_id) {
-      const message = one.email + " is online";
-      const response = true;
-      return res.json200(response, message);
-    } else {
-      const message = "User is not online";
-      return res.json400(message);
+  async function online(req, res) {
+    try {
+      const { user_id } = req.session;
+      if (!user_id) {
+        return res.status(400).json({ message: 'User is not online' });
+      }
+  
+      const one = await readById(user_id);
+      if (!one) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const message = `${one.email} is online`;
+      return res.status(200).json({ online: true, message });
+    } catch (error) {
+      console.error("Error en online:", error.message);
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
+  
   function google(req, res) {
     return res.redirect('/products');
   }
