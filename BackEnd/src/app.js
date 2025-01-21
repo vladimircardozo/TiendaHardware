@@ -12,7 +12,7 @@ import pathHandler from "./middlewares/pathHandler.mid.js";
 import errorHandler from "./middlewares/errorHandler.mid.js";
 import appRouter from "./routes/app.router.js";
 import sessionsRouter from "./routes/api/sessions.api.js"
-import dbConnect from "./utils/dbconnect.util.js";
+import dbConnect from "./utils/dbConnect.util.js";
 import setupSocket from "./utils/socket.util.js";
 import session from "express-session";
 
