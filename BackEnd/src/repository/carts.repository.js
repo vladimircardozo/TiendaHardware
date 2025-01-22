@@ -1,5 +1,5 @@
 import CartDTO from "../dto/cart.dto.js";
-import dao from "../dao/index.factory.js";
+import dao from "../data/index.factory.js";
 const { CartsManager } = dao;
 
 class CartsRepository {
